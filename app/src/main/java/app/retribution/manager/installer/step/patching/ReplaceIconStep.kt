@@ -68,12 +68,13 @@ class ReplaceIconStep : Step() {
             )
             val transparent = arsc.getPackageChunk().addColorResource("retribution_transparent", Color(0x00000000))
 
-            // Write the full icon into the APK as a drawable
+            // Write the icon into the APK as a drawable at the max adaptive icon size
             val drawablePath = "res/drawable/retribution_icon.png"
             val hasDrawable = ZipReader(baseApk).use { drawablePath in it.entryNames }
+            val drawableBytes = scaleIcon(iconBytes, DRAWABLE_ICON_SIZE)
             ZipWriter(baseApk, /* append = */ true).use {
                 if (hasDrawable) it.deleteEntry(drawablePath)
-                it.writeEntry(drawablePath, iconBytes)
+                it.writeEntry(drawablePath, drawableBytes)
             }
 
             // Replace all mipmap PNGs with scaled versions of the icon
@@ -115,6 +116,43 @@ class ReplaceIconStep : Step() {
         }
     }
 
+    private fun scaleIcon(iconBytes: ByteArray, targetSize: Int): ByteArray {
+        // Decode the original bounds first to pick a good inSampleSize
+        val boundsOptions = BitmapFactory.Options().apply {
+            inJustDecodeBounds = true
+        }
+        BitmapFactory.decodeByteArray(iconBytes, 0, iconBytes.size, boundsOptions)
+        val (srcWidth, srcHeight) = boundsOptions.run { outWidth to outHeight }
+
+        var inSampleSize = 1
+        while (srcWidth / (inSampleSize * 2) >= targetSize && srcHeight / (inSampleSize * 2) >= targetSize) {
+            inSampleSize *= 2
+        }
+
+        val decodeOptions = BitmapFactory.Options().apply {
+            this.inSampleSize = inSampleSize
+            inPreferredConfig = Bitmap.Config.ARGB_8888
+        }
+        val sampled = BitmapFactory.decodeByteArray(iconBytes, 0, iconBytes.size, decodeOptions)
+            ?: error("Failed to decode Retribution icon")
+
+        if (sampled.width == targetSize && sampled.height == targetSize) {
+            return ByteArrayOutputStream().use { stream ->
+                sampled.compress(Bitmap.CompressFormat.PNG, 100, stream)
+                stream.toByteArray()
+            }.also { sampled.recycle() }
+        }
+
+        val scaled = Bitmap.createScaledBitmap(sampled, targetSize, targetSize, true)
+        val out = ByteArrayOutputStream().use { stream ->
+            scaled.compress(Bitmap.CompressFormat.PNG, 100, stream)
+            stream.toByteArray()
+        }
+        scaled.recycle()
+        sampled.recycle()
+        return out
+    }
+
     private suspend fun downloadIcon(): ByteArray = withContext(Dispatchers.IO) {
         val url = URL(BuildConfig.MODDED_APP_ICON_URL)
         val connection = url.openConnection() as HttpURLConnection
@@ -137,9 +175,6 @@ class ReplaceIconStep : Step() {
             "mipmap-xxxhdpi" to 192,
         )
 
-        val original = BitmapFactory.decodeByteArray(iconBytes, 0, iconBytes.size)
-            ?: error("Failed to decode Retribution icon")
-
         val mipmapEntries = ZipReader(baseApk).use { zip ->
             zip.entryNames.filter { it.startsWith("res/mipmap") && it.endsWith(".png") }
         }
@@ -151,18 +186,16 @@ class ReplaceIconStep : Step() {
                 val size = densitySizes.entries.find { entryName.contains(it.key) }?.value ?: 192
 
                 val scaledBytes = iconBySize.getOrPut(size) {
-                    val scaled = Bitmap.createScaledBitmap(original, size, size, true)
-                    ByteArrayOutputStream().use { stream ->
-                        scaled.compress(Bitmap.CompressFormat.PNG, 100, stream)
-                        stream.toByteArray()
-                    }.also { scaled.recycle() }
+                    scaleIcon(iconBytes, size)
                 }
 
                 zip.deleteEntry(entryName)
                 zip.writeEntry(entryName, scaledBytes)
             }
         }
+    }
 
-        original.recycle()
+    private companion object {
+        const val DRAWABLE_ICON_SIZE = 432
     }
 }
