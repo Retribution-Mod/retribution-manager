@@ -1,3 +1,10 @@
+## [1.0.2](https://github.com/Retribution-Mod/retribution-manager/compare/v1.0.1...v1.0.2) (2026-08-18)
+
+
+### Bug Fixes
+
+* **manager:** correct arsc resource IDs and scale icon for crisp launcher icon ([bc44335](https://github.com/Retribution-Mod/retribution-manager/commit/bc44335cada833f3722bcbcfcb66403968a9dbac))
+
 ## [1.0.1](https://github.com/Retribution-Mod/retribution-manager/compare/v1.0.0...v1.0.1) (2026-08-18)
 
 
