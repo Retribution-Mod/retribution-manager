@@ -174,9 +174,8 @@ class ReplaceIconStep : Step() {
             connection.readTimeout = 60_000
             connection.instanceFollowRedirects = true
 
-            connection.inputStream.use { bytes ->
-                connection.disconnect()
-                bytes
+            connection.inputStream.use { stream ->
+                stream.readBytes().also { connection.disconnect() }
             }
         }
     }
