@@ -42,7 +42,7 @@ Application to use Retribution on Android.
 
 ## ❓ About
 
-Retribution Manager is an application that installs and updates [Retribution](https://github.com/Retribution-Mod/Retribution), a client modification for Discord. For iOS, use [retribution-tweak](https://github.com/Retribution-Mod/retribution-tweak/releases/latest) with [SideStore](https://sidestore.io).
+Retribution Manager is an application that installs and updates [Retribution](https://github.com/Retribution-Mod/retribution-bundle), a client modification for Discord. For iOS, use [retribution-tweak](https://github.com/Retribution-Mod/retribution-tweak/releases/latest) with [SideStore](https://sidestore.io).
 
 ## 💪 Features
 
