@@ -56,9 +56,9 @@ class ReplaceIconStep : Step() {
         runner.logger.i("Patching icon assets (squareIcon=$squareIconFile, roundIcon=$roundIconFile)")
 
         val iconBytes = try {
-            loadIcon()
+            loadIcon().also { runner.logger.i("Loaded Retribution icon, size=${it.size} bytes") }
         } catch (t: Throwable) {
-            runner.logger.i("Failed to load Retribution icon, falling back to color: ${t.message}")
+            runner.logger.e("Failed to load Retribution icon, falling back to color: ${t.stackTraceToString()}")
             null
         }
 
@@ -164,7 +164,7 @@ class ReplaceIconStep : Step() {
     private suspend fun loadIcon(): ByteArray = withContext(Dispatchers.IO) {
         try {
             // Try the bundled asset first; this is more reliable than a network download.
-            context.assets.open("retribution_icon.png").use { return@withContext it.readBytes() }
+            context.assets.open("retribution_icon.png").use { it.readBytes() }
         } catch (t: Throwable) {
             // Fallback to the remote URL if the asset is missing or fails to load.
             val url = URL(BuildConfig.MODDED_APP_ICON_URL)
@@ -174,8 +174,9 @@ class ReplaceIconStep : Step() {
             connection.readTimeout = 60_000
             connection.instanceFollowRedirects = true
 
-            connection.inputStream.use { return@withContext it.readBytes() }.also {
+            connection.inputStream.use { bytes ->
                 connection.disconnect()
+                bytes
             }
         }
     }
