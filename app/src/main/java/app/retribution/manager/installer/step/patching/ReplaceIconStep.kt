@@ -56,9 +56,9 @@ class ReplaceIconStep : Step() {
         runner.logger.i("Patching icon assets (squareIcon=$squareIconFile, roundIcon=$roundIconFile)")
 
         val iconBytes = try {
-            downloadIcon()
+            loadIcon()
         } catch (t: Throwable) {
-            runner.logger.i("Failed to download Retribution icon, falling back to color: ${t.message}")
+            runner.logger.i("Failed to load Retribution icon, falling back to color: ${t.message}")
             null
         }
 
@@ -161,16 +161,22 @@ class ReplaceIconStep : Step() {
         return out
     }
 
-    private suspend fun downloadIcon(): ByteArray = withContext(Dispatchers.IO) {
-        val url = URL(BuildConfig.MODDED_APP_ICON_URL)
-        val connection = url.openConnection() as HttpURLConnection
-        connection.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36")
-        connection.connectTimeout = 30_000
-        connection.readTimeout = 60_000
-        connection.instanceFollowRedirects = true
+    private suspend fun loadIcon(): ByteArray = withContext(Dispatchers.IO) {
+        try {
+            // Try the bundled asset first; this is more reliable than a network download.
+            context.assets.open("retribution_icon.png").use { return@withContext it.readBytes() }
+        } catch (t: Throwable) {
+            // Fallback to the remote URL if the asset is missing or fails to load.
+            val url = URL(BuildConfig.MODDED_APP_ICON_URL)
+            val connection = url.openConnection() as HttpURLConnection
+            connection.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36")
+            connection.connectTimeout = 30_000
+            connection.readTimeout = 60_000
+            connection.instanceFollowRedirects = true
 
-        connection.inputStream.use { it.readBytes() }.also {
-            connection.disconnect()
+            connection.inputStream.use { return@withContext it.readBytes() }.also {
+                connection.disconnect()
+            }
         }
     }
 
