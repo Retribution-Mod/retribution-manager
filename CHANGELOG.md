@@ -1,3 +1,10 @@
+## [1.2.1](https://github.com/Retribution-Mod/retribution-manager/compare/v1.2.0...v1.2.1) (2026-08-19)
+
+
+### Bug Fixes
+
+* regenerate transparent icon mask, add in-app icon asset, overwrite APK foregrounds ([b46cad2](https://github.com/Retribution-Mod/retribution-manager/commit/b46cad274c93992c7d95fa81a63ff0a1098e5245))
+
 # [1.2.0](https://github.com/Retribution-Mod/retribution-manager/compare/v1.1.1...v1.2.0) (2026-08-19)
 
 
