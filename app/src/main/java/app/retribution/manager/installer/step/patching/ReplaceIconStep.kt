@@ -63,12 +63,12 @@ class ReplaceIconStep : Step() {
         }
 
         val (background, foreground) = if (iconBytes != null) {
-            // Add the icon as a drawable resource and use a transparent foreground
+            // Use a black background and the loaded icon as the adaptive foreground.
             val iconDrawable = arsc.addDrawableResource(
                 name = "retribution_icon",
                 path = "res/drawable/retribution_icon.png",
             )
-            val transparent = arsc.getPackageChunk().addColorResource("retribution_transparent", Color(0x00000000))
+            val backgroundColor = arsc.getPackageChunk().addColorResource("retribution_icon_bg", Color(0xFF000000))
 
             // Write the icon into the APK as a drawable at the max adaptive icon size
             val drawablePath = "res/drawable/retribution_icon.png"
@@ -82,7 +82,7 @@ class ReplaceIconStep : Step() {
             // Replace all mipmap PNGs with scaled versions of the icon
             replaceMipmapIcons(baseApk, iconBytes)
 
-            iconDrawable to transparent
+            backgroundColor to iconDrawable
         } else {
             // Fallback to the old color-only icon
             val color = arsc.getPackageChunk().addColorResource("brand", Color(BuildConfig.MODDED_APP_ICON))
@@ -161,6 +161,38 @@ class ReplaceIconStep : Step() {
         return out
     }
 
+    private fun fillScaleIcon(iconBytes: ByteArray, targetSize: Int): ByteArray {
+        // Decode the original bounds first to pick a good inSampleSize
+        val boundsOptions = BitmapFactory.Options().apply {
+            inJustDecodeBounds = true
+        }
+        BitmapFactory.decodeByteArray(iconBytes, 0, iconBytes.size, boundsOptions)
+        val (srcWidth, srcHeight) = boundsOptions.run { outWidth to outHeight }
+
+        var inSampleSize = 1
+        while (srcWidth / (inSampleSize * 2) >= targetSize && srcHeight / (inSampleSize * 2) >= targetSize) {
+            inSampleSize *= 2
+        }
+
+        val decodeOptions = BitmapFactory.Options().apply {
+            this.inSampleSize = inSampleSize
+            inPreferredConfig = Bitmap.Config.ARGB_8888
+        }
+        val sampled = BitmapFactory.decodeByteArray(iconBytes, 0, iconBytes.size, decodeOptions)
+            ?: error("Failed to decode Retribution icon")
+
+        val icon = Bitmap.createScaledBitmap(sampled, targetSize, targetSize, true)
+
+        val out = ByteArrayOutputStream().use { stream ->
+            icon.compress(Bitmap.CompressFormat.PNG, 100, stream)
+            stream.toByteArray()
+        }
+
+        icon.recycle()
+        sampled.recycle()
+        return out
+    }
+
     private suspend fun loadIcon(): ByteArray = withContext(Dispatchers.IO) {
         try {
             // Try the bundled asset first; this is more reliable than a network download.
@@ -202,7 +234,7 @@ class ReplaceIconStep : Step() {
                 val size = densitySizes.entries.find { entryName.contains(it.key) }?.value ?: 192
 
                 val scaledBytes = iconBySize.getOrPut(size) {
-                    scaleIcon(iconBytes, size)
+                    fillScaleIcon(iconBytes, size)
                 }
 
                 zip.deleteEntry(entryName)
