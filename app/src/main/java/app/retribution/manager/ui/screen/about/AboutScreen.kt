@@ -14,8 +14,8 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material3.Divider
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -52,7 +52,7 @@ import app.retribution.manager.ui.widgets.about.LinkItem
 import app.retribution.manager.ui.widgets.about.ListItem
 import app.retribution.manager.ui.widgets.about.UserEntry
 import app.retribution.manager.utils.*
-import org.koin.androidx.compose.get
+import org.koin.androidx.compose.koinInject
 
 class AboutScreen : Screen {
 
@@ -60,7 +60,7 @@ class AboutScreen : Screen {
     @OptIn(ExperimentalMaterial3Api::class)
     override fun Content() {
         val uriHandler = LocalUriHandler.current
-        val prefs: PreferenceManager = get()
+        val prefs: PreferenceManager = koinInject()
         val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
         val ctx = LocalContext.current
         val bitmap = remember {
@@ -172,7 +172,7 @@ class AboutScreen : Screen {
                                 }
                             )
                             if (i != Constants.TEAM_MEMBERS.lastIndex) {
-                                Divider(
+                                HorizontalDivider(
                                     thickness = 0.5.dp,
                                     color = MaterialTheme.colorScheme.outline.copy(alpha = 0.3f),
                                     modifier = Modifier.padding(horizontal = 16.dp)
@@ -261,7 +261,7 @@ class AboutScreen : Screen {
                         //     text = stringResource(R.string.label_translate),
                         //     onClick = { uriHandler.openUri("https://crowdin.com/project/vendetta-manager") }
                         // )
-//                        Divider(
+//                        HorizontalDivider(
 //                            thickness = 0.5.dp,
 //                            color = MaterialTheme.colorScheme.outline.copy(alpha = 0.3f),
 //                            modifier = Modifier.padding(horizontal = 16.dp)
@@ -289,7 +289,7 @@ class AboutScreen : Screen {
             navigationIcon = {
                 IconButton(onClick = { navigator.pop() }) {
                     Icon(
-                        imageVector = Icons.Filled.ArrowBack,
+                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                         contentDescription = stringResource(R.string.action_back)
                     )
                 }

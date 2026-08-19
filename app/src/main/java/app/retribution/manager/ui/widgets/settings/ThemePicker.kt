@@ -19,8 +19,8 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.NavigateBefore
-import androidx.compose.material.icons.outlined.NavigateNext
+import androidx.compose.material.icons.automirrored.outlined.NavigateBefore
+import androidx.compose.material.icons.automirrored.outlined.NavigateNext
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -116,7 +116,7 @@ fun ThemePicker(
                     modifier = Modifier.align(Alignment.CenterStart)
                 ) {
                     Icon(
-                        imageVector = Icons.Outlined.NavigateBefore,
+                        imageVector = Icons.AutoMirrored.Outlined.NavigateBefore,
                         contentDescription = stringResource(R.string.action_previous_theme),
                         modifier = Modifier.size(34.dp)
                     )
@@ -133,7 +133,7 @@ fun ThemePicker(
                     modifier = Modifier.align(Alignment.CenterEnd)
                 ) {
                     Icon(
-                        imageVector = Icons.Outlined.NavigateNext,
+                        imageVector = Icons.AutoMirrored.Outlined.NavigateNext,
                         contentDescription = stringResource(R.string.action_next_theme),
                         modifier = Modifier.size(34.dp)
                     )

@@ -60,13 +60,12 @@ fun rememberFileSaveLauncher(content: String, mimeType: String = "text/plain"): 
 
 private val cachedBitmaps: MutableMap<Int, MutableMap<Int, Bitmap>> = mutableMapOf()
 
-context(Context)
-private val Int.dp: Int
-    get() = (45 * this@Context.resources.displayMetrics.density + 0.5f).toInt()
+private fun Context.dpToPx(dp: Int): Int =
+    (dp * resources.displayMetrics.density + 0.5f).toInt()
 
 fun Context.getBitmap(@DrawableRes icon: Int, size: Int): Bitmap {
     cachedBitmaps[icon]?.let { it[size]?.let { bitmap -> return bitmap } }
-    val sizePx = size.dp
+    val sizePx = dpToPx(size)
 
     val bitmap = AppCompatResources.getDrawable(this, icon)!!.toBitmap(
         height = sizePx,

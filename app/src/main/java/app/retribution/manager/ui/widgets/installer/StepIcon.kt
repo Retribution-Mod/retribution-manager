@@ -46,7 +46,7 @@ fun StepIcon(
         StepStatus.ONGOING -> {
             if(progress != null) {
                 CircularProgressIndicator(
-                    progress = progress,
+                    progress = { progress },
                     strokeWidth = strokeWidth,
                     modifier = Modifier
                         .size(size)
