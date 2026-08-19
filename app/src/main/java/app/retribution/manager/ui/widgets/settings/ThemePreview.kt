@@ -18,14 +18,14 @@ import app.retribution.manager.BuildConfig
 import app.retribution.manager.R
 import app.retribution.manager.domain.manager.PreferenceManager
 import app.retribution.manager.utils.DiscordVersion
-import org.koin.androidx.compose.koinInject
+import org.koin.androidx.compose.get
 
 @Composable
 fun ThemePreview(
     colorScheme: ColorScheme,
     modifier: Modifier = Modifier
 ) {
-    val prefs: PreferenceManager = koinInject()
+    val prefs: PreferenceManager = get()
     val light = colorScheme.background.luminance() > 0.5f
     val layerModifier = Modifier.height(300.dp)
     val iconColor = remember(prefs.patchIcon, prefs.channel) {

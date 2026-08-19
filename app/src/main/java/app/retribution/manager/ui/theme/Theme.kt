@@ -11,13 +11,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 import app.retribution.manager.domain.manager.PreferenceManager
 import app.retribution.manager.domain.manager.Theme
-import org.koin.androidx.compose.koinInject
+import org.koin.androidx.compose.get
 
 @Composable
 fun RetributionManagerTheme(
     content: @Composable () -> Unit
 ) {
-    val prefs = koinInject<PreferenceManager>()
+    val prefs = get<PreferenceManager>()
     val dynamicColor = prefs.monet
     val darkTheme = when (prefs.theme) {
         Theme.SYSTEM -> isSystemInDarkTheme()

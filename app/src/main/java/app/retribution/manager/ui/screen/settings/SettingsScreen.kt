@@ -6,7 +6,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.outlined.AutoAwesome
 import androidx.compose.material.icons.outlined.Code
 import androidx.compose.material.icons.outlined.Info
@@ -33,14 +33,14 @@ import app.retribution.manager.domain.manager.PreferenceManager
 import app.retribution.manager.ui.components.settings.SettingsCategory
 import app.retribution.manager.ui.screen.about.AboutScreen
 import app.retribution.manager.utils.DimenUtils
-import org.koin.androidx.compose.koinInject
+import org.koin.androidx.compose.get
 
 class SettingsScreen : Screen {
 
     @Composable
     @OptIn(ExperimentalMaterial3Api::class)
     override fun Content() {
-        val preferences: PreferenceManager = koinInject()
+        val preferences: PreferenceManager = get()
         val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
 
         Scaffold(
@@ -118,7 +118,7 @@ class SettingsScreen : Screen {
             navigationIcon = {
                 IconButton(onClick = { navigator.pop() }) {
                     Icon(
-                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                        imageVector = Icons.Filled.ArrowBack,
                         contentDescription = stringResource(R.string.action_back)
                     )
                 }
