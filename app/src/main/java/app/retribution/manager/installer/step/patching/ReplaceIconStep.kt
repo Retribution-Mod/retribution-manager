@@ -164,8 +164,9 @@ class ReplaceIconStep : Step() {
     private suspend fun downloadIcon(): ByteArray = withContext(Dispatchers.IO) {
         val url = URL(BuildConfig.MODDED_APP_ICON_URL)
         val connection = url.openConnection() as HttpURLConnection
+        connection.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36")
         connection.connectTimeout = 30_000
-        connection.readTimeout = 30_000
+        connection.readTimeout = 60_000
         connection.instanceFollowRedirects = true
 
         connection.inputStream.use { it.readBytes() }.also {
