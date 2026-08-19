@@ -27,7 +27,7 @@ android {
         buildConfigField("String", "ORG_LINK", "\"https://github.com/Retribution-Mod\"")
         buildConfigField("String", "INVITE_LINK", "\"https://discord.gg/7CWcwZZGWr\"")
         buildConfigField("String", "MODDED_APP_PACKAGE_NAME", "\"app.retribution\"")
-        buildConfigField("String", "MODDED_APP_ICON_URL", "\"https://i.allyapp.cc/raw/gDH8Eowi.png\"")
+        buildConfigField("String", "MODDED_APP_ICON_URL", "\"https://raw.githubusercontent.com/Retribution-Mod/retribution-manager/main/app/src/main/assets/retribution_icon.png\"")
         buildConfigField("int", "MODDED_APP_ICON", "0xFEB23A42")
         buildConfigField("int", "MODDED_APP_ICON_ALPHA", "0xFFFBB33C")
         buildConfigField("int", "MODDED_APP_ICON_OTHER", "0xFFD3575E")
