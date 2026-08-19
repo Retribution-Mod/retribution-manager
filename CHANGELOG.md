@@ -1,3 +1,11 @@
+# [1.1.0](https://github.com/Retribution-Mod/retribution-manager/compare/v1.0.6...v1.1.0) (2026-08-19)
+
+
+### Features
+
+* update app and bundle icon to the new Retribution angry icon ([72bf7e8](https://github.com/Retribution-Mod/retribution-manager/commit/72bf7e8551ddbed204c929f7e16efd3bd48e16f6))
+* use user-provided bundle and manager icons ([4f7df0b](https://github.com/Retribution-Mod/retribution-manager/commit/4f7df0be5313ab5c153a60a1c3b4832911887302))
+
 ## [1.0.6](https://github.com/Retribution-Mod/retribution-manager/compare/v1.0.5...v1.0.6) (2026-08-19)
 
 
