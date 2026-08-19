@@ -1,3 +1,11 @@
+## [1.0.3](https://github.com/Retribution-Mod/retribution-manager/compare/v1.0.2...v1.0.3) (2026-08-19)
+
+
+### Bug Fixes
+
+* **manager:** scale modded app icon into adaptive safe-zone canvas ([a0419ab](https://github.com/Retribution-Mod/retribution-manager/commit/a0419ab06ffa5777c9a622c57e47815c32f63f74))
+* **manager:** set User-Agent and longer read timeout for icon download ([718e1b3](https://github.com/Retribution-Mod/retribution-manager/commit/718e1b3559d1ff780c23c5c1a579fe5ac7afa10c))
+
 ## [1.0.2](https://github.com/Retribution-Mod/retribution-manager/compare/v1.0.1...v1.0.2) (2026-08-19)
 
 
