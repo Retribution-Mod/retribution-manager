@@ -1,3 +1,10 @@
+## [1.0.4](https://github.com/Retribution-Mod/retribution-manager/compare/v1.0.3...v1.0.4) (2026-08-19)
+
+
+### Bug Fixes
+
+* **manager:** bundle retribution icon as asset, load it instead of network ([0407452](https://github.com/Retribution-Mod/retribution-manager/commit/04074525c190942313d800711666dea69dd3438f))
+
 ## [1.0.3](https://github.com/Retribution-Mod/retribution-manager/compare/v1.0.2...v1.0.3) (2026-08-19)
 
 
