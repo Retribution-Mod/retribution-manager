@@ -17,7 +17,7 @@
            <img height="32px" src="assets/logo/logo-light.svg" />
        </picture>
    </a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-   <a href="https://discord.com/invite/ddcQf3s2Uq">
+   <a href="https://discord.gg/7CWcwZZGWr">
        <picture>
            <source height="32px" media="(prefers-color-scheme: dark)" srcset="https://user-images.githubusercontent.com/13122796/178032563-d4e084b7-244e-4358-af50-26bde6dd4996.png" />
            <img height="32px" src="https://user-images.githubusercontent.com/13122796/178032563-d4e084b7-244e-4358-af50-26bde6dd4996.png" />
@@ -42,8 +42,7 @@ Application to use Retribution on Android.
 
 ## ❓ About
 
-Retribution Manager is an application that installs and updates [Retribution](https://github.com/Retribution-Mod/Retribution),
-a modification for Discord.
+Retribution Manager is an application that installs and updates [Retribution](https://github.com/Retribution-Mod/Retribution), a client modification for Discord. For iOS, use [retribution-tweak](https://github.com/Retribution-Mod/retribution-tweak/releases/latest) with [SideStore](https://sidestore.io).
 
 ## 💪 Features
 
@@ -53,6 +52,7 @@ Some of the features Retribution Manager provides are:
 - 🔁 **Update**: Update Retribution to the latest version
 - 🔔 **Notifications**: Be notified when a new version of Retribution is available
 - 📃 **Changelog**: See the changelog of Retribution
+- 🔌 **Plugins & themes**: Browse plugins at https://plugins-list.pages.dev or install the [Plugin List plugin](https://purple-eyez.github.io/Plugins-List_Plugin/plugins-list/), and find fonts at https://bunny-google-fonts.vercel.app/
 
 ## 🔽 Download
 
