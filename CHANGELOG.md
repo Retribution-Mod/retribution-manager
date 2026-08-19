@@ -1,3 +1,10 @@
+## [1.1.1](https://github.com/Retribution-Mod/retribution-manager/compare/v1.1.0...v1.1.1) (2026-08-19)
+
+
+### Bug Fixes
+
+* **manager:** show bundle icon in manager UI and fix adaptive icon patching ([69dfe2d](https://github.com/Retribution-Mod/retribution-manager/commit/69dfe2dd0ae55aaec6a3de0bc47a57e399e94104))
+
 # [1.1.0](https://github.com/Retribution-Mod/retribution-manager/compare/v1.0.6...v1.1.0) (2026-08-19)
 
 
