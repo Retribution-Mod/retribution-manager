@@ -112,7 +112,8 @@ class ReplaceIconStep : Step() {
     private fun scaleForeground(fgBytes: ByteArray, targetSize: Int): ByteArray {
         val safeZoneSize = (targetSize * 66 / 108).coerceAtLeast(1)
         val sampled = decodeBitmap(fgBytes)
-        val icon = Bitmap.createScaledBitmap(sampled, safeZoneSize, safeZoneSize, true)
+        val (iconW, iconH) = fitSize(sampled.width, sampled.height, safeZoneSize)
+        val icon = Bitmap.createScaledBitmap(sampled, iconW, iconH, true)
 
         val canvasBitmap = Bitmap.createBitmap(targetSize, targetSize, Bitmap.Config.ARGB_8888)
         val canvas = Canvas(canvasBitmap)
@@ -137,7 +138,8 @@ class ReplaceIconStep : Step() {
         val bgScaled = Bitmap.createScaledBitmap(bgSampled, targetSize, targetSize, true)
 
         val fgSampled = decodeBitmap(fgBytes)
-        val fgScaled = Bitmap.createScaledBitmap(fgSampled, safeZoneSize, safeZoneSize, true)
+        val (fgW, fgH) = fitSize(fgSampled.width, fgSampled.height, safeZoneSize)
+        val fgScaled = Bitmap.createScaledBitmap(fgSampled, fgW, fgH, true)
 
         val canvasBitmap = Bitmap.createBitmap(targetSize, targetSize, Bitmap.Config.ARGB_8888)
         val canvas = Canvas(canvasBitmap)
@@ -158,6 +160,14 @@ class ReplaceIconStep : Step() {
         fgScaled.recycle()
         fgSampled.recycle()
         return out
+    }
+
+    private fun fitSize(srcWidth: Int, srcHeight: Int, maxSize: Int): Pair<Int, Int> {
+        if (srcWidth == 0 || srcHeight == 0) return maxSize to maxSize
+        val scale = (maxSize.toFloat() / maxOf(srcWidth, srcHeight)).coerceAtMost(1f)
+        val w = (srcWidth * scale).toInt().coerceAtLeast(1)
+        val h = (srcHeight * scale).toInt().coerceAtLeast(1)
+        return w to h
     }
 
     private fun decodeBitmap(bytes: ByteArray): Bitmap {
