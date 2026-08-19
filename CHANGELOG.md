@@ -1,3 +1,10 @@
+## [1.0.6](https://github.com/Retribution-Mod/retribution-manager/compare/v1.0.5...v1.0.6) (2026-08-19)
+
+
+### Bug Fixes
+
+* **manager:** remove unused high-risk permissions to reduce Play Protect warning ([2caa2f1](https://github.com/Retribution-Mod/retribution-manager/commit/2caa2f1a3fc333377d227c5eb607678e56d18a48))
+
 ## [1.0.5](https://github.com/Retribution-Mod/retribution-manager/compare/v1.0.4...v1.0.5) (2026-08-19)
 
 
