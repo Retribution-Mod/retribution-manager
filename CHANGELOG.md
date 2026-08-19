@@ -1,3 +1,13 @@
+## [1.0.5](https://github.com/Retribution-Mod/retribution-manager/compare/v1.0.4...v1.0.5) (2026-08-19)
+
+
+### Bug Fixes
+
+* **manager:** correct adaptive icon resource IDs and bump binary-resources to 2.1.0 ([e983e11](https://github.com/Retribution-Mod/retribution-manager/commit/e983e11c31467674223fa8eb7aeb3f5dde0b41a8))
+* **manager:** keep binary-resources 2.0.0; 2.1.0 is not in snapshots repo ([ab98bab](https://github.com/Retribution-Mod/retribution-manager/commit/ab98bab04884a503139f258e8058812e0978db99))
+* **manager:** read remote icon bytes instead of returning InputStream ([05c7a4a](https://github.com/Retribution-Mod/retribution-manager/commit/05c7a4a8949947bc5eef3a88fa40a0e7e2dbfe12))
+* **manager:** safer icon loading with full error logging ([7801aba](https://github.com/Retribution-Mod/retribution-manager/commit/7801abaa2ec54120b1b585f0b74f810ba4d9114a))
+
 ## [1.0.4](https://github.com/Retribution-Mod/retribution-manager/compare/v1.0.3...v1.0.4) (2026-08-19)
 
 
