@@ -3,6 +3,8 @@ package app.retribution.manager.installer.step.patching
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.Canvas
+import android.graphics.Paint
 import androidx.compose.ui.graphics.Color
 import com.github.diamondminer88.zip.ZipReader
 import com.github.diamondminer88.zip.ZipWriter
@@ -117,6 +119,9 @@ class ReplaceIconStep : Step() {
     }
 
     private fun scaleIcon(iconBytes: ByteArray, targetSize: Int): ByteArray {
+        // 108dp adaptive icon with a 72dp safe-zone foreground
+        val safeZoneIconSize = (targetSize * 72 / 108).coerceAtLeast(1)
+
         // Decode the original bounds first to pick a good inSampleSize
         val boundsOptions = BitmapFactory.Options().apply {
             inJustDecodeBounds = true
@@ -125,7 +130,7 @@ class ReplaceIconStep : Step() {
         val (srcWidth, srcHeight) = boundsOptions.run { outWidth to outHeight }
 
         var inSampleSize = 1
-        while (srcWidth / (inSampleSize * 2) >= targetSize && srcHeight / (inSampleSize * 2) >= targetSize) {
+        while (srcWidth / (inSampleSize * 2) >= safeZoneIconSize && srcHeight / (inSampleSize * 2) >= safeZoneIconSize) {
             inSampleSize *= 2
         }
 
@@ -136,19 +141,22 @@ class ReplaceIconStep : Step() {
         val sampled = BitmapFactory.decodeByteArray(iconBytes, 0, iconBytes.size, decodeOptions)
             ?: error("Failed to decode Retribution icon")
 
-        if (sampled.width == targetSize && sampled.height == targetSize) {
-            return ByteArrayOutputStream().use { stream ->
-                sampled.compress(Bitmap.CompressFormat.PNG, 100, stream)
-                stream.toByteArray()
-            }.also { sampled.recycle() }
-        }
+        val icon = Bitmap.createScaledBitmap(sampled, safeZoneIconSize, safeZoneIconSize, true)
+        val canvas = Bitmap.createBitmap(targetSize, targetSize, Bitmap.Config.ARGB_8888)
+        Canvas(canvas).drawBitmap(
+            icon,
+            (targetSize - icon.width) / 2f,
+            (targetSize - icon.height) / 2f,
+            Paint(Paint.ANTI_ALIAS_FLAG or Paint.FILTER_BITMAP_FLAG)
+        )
 
-        val scaled = Bitmap.createScaledBitmap(sampled, targetSize, targetSize, true)
         val out = ByteArrayOutputStream().use { stream ->
-            scaled.compress(Bitmap.CompressFormat.PNG, 100, stream)
+            canvas.compress(Bitmap.CompressFormat.PNG, 100, stream)
             stream.toByteArray()
         }
-        scaled.recycle()
+
+        canvas.recycle()
+        icon.recycle()
         sampled.recycle()
         return out
     }
@@ -166,13 +174,14 @@ class ReplaceIconStep : Step() {
     }
 
     private fun replaceMipmapIcons(baseApk: File, iconBytes: ByteArray) {
+        // 108dp adaptive-icon canvas with 72dp safe-zone content
         val densitySizes = mapOf(
-            "mipmap-ldpi" to 36,
-            "mipmap-mdpi" to 48,
-            "mipmap-hdpi" to 72,
-            "mipmap-xhdpi" to 96,
-            "mipmap-xxhdpi" to 144,
-            "mipmap-xxxhdpi" to 192,
+            "mipmap-ldpi" to 81,
+            "mipmap-mdpi" to 108,
+            "mipmap-hdpi" to 162,
+            "mipmap-xhdpi" to 216,
+            "mipmap-xxhdpi" to 324,
+            "mipmap-xxxhdpi" to 432,
         )
 
         val mipmapEntries = ZipReader(baseApk).use { zip ->
