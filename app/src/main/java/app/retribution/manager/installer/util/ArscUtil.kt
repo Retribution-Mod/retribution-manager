@@ -87,8 +87,12 @@ object ArscUtil {
         // Add a new string to the pool to be used as a key
         val resourceNameIdx = this.keyStringPool.addString(resourceName, /* deduplicate = */ true)
 
-        // Add a new resource entry to the type spec chunk
-        val resourceIdx = specChunk.addResource(/* flags = */ 0)
+        // The new resource's 0-based index is the current count.
+        // Do NOT use the return value of addResource(); in binary-resources 2.0.0
+        // it is off-by-one in release builds, causing adaptive-icon XML to reference
+        // the previous resource instead of the newly added one.
+        val resourceIdx = specChunk.getResourceCount()
+        specChunk.addResource(/* flags = */ 0)
 
         for (typeChunk in typeChunks) {
             // If no matching config, add a null entry and try next chunk
