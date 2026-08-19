@@ -43,8 +43,12 @@ jobs:
               run: npm install
 
             - name: Setup keystore
+              env:
+                  KEYSTORE: ${{ secrets.KEYSTORE }}
               run: |
-                  echo "${{ secrets.KEYSTORE }}" | base64 --decode > "app/keystore.jks"
+                  if [ -n "$KEYSTORE" ]; then
+                      echo "$KEYSTORE" | base64 --decode > "app/keystore.jks"
+                  fi
 
             - name: Release
               env:
