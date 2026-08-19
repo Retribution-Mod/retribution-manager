@@ -1,3 +1,10 @@
+# [1.2.0](https://github.com/Retribution-Mod/retribution-manager/compare/v1.1.1...v1.2.0) (2026-08-19)
+
+
+### Features
+
+* implement two-layer adaptive icon pipeline to fix blurry patched icons ([bebb270](https://github.com/Retribution-Mod/retribution-manager/commit/bebb2700d701b6007a2aca0816d7325da8f6b29a))
+
 ## [1.1.1](https://github.com/Retribution-Mod/retribution-manager/compare/v1.1.0...v1.1.1) (2026-08-19)
 
 
