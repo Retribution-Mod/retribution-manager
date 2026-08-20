@@ -1,3 +1,10 @@
+## [1.5.2](https://github.com/Retribution-Mod/retribution-manager/compare/v1.5.1...v1.5.2) (2026-08-20)
+
+
+### Bug Fixes
+
+* **security:** Added SHA-256 hash verification for downloaded APK files against tracker API hashes to prevent trojanized package installation. ([020a86a](https://github.com/Retribution-Mod/retribution-manager/commit/020a86ab3eaa9e2284c01a02b9ec63292f93ecbb))
+
 ## [1.5.1](https://github.com/Retribution-Mod/retribution-manager/compare/v1.5.0...v1.5.1) (2026-08-20)
 
 
