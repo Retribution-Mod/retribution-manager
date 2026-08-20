@@ -160,15 +160,15 @@ abstract class DownloadStep : Step() {
                 runner.logger.i("Hash verification successful for ${destination.name}")
             }
             is ApiResponse.Error -> {
-                runner.logger.w("Failed to fetch hash from tracker (HTTP ${hashResponse.error.status}). Hash verification skipped.")
+                runner.logger.e("Failed to fetch hash from tracker (${hashResponse.error.message}). Hash verification skipped.")
                 if (enforceHashVerification) {
-                    runner.logger.w("WARNING: Hash verification is enforced but hash could not be retrieved. Proceeding without verification.")
+                    runner.logger.e("WARNING: Hash verification is enforced but hash could not be retrieved. Proceeding without verification.")
                 }
             }
             is ApiResponse.Failure -> {
-                runner.logger.w("Failed to fetch hash from tracker: ${hashResponse.error.throwable.message}. Hash verification skipped.")
+                runner.logger.e("Failed to fetch hash from tracker: ${hashResponse.error.cause?.message}. Hash verification skipped.")
                 if (enforceHashVerification) {
-                    runner.logger.w("WARNING: Hash verification is enforced but hash could not be retrieved. Proceeding without verification.")
+                    runner.logger.e("WARNING: Hash verification is enforced but hash could not be retrieved. Proceeding without verification.")
                 }
             }
         }
