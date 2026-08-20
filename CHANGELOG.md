@@ -1,3 +1,10 @@
+## [1.5.1](https://github.com/Retribution-Mod/retribution-manager/compare/v1.5.0...v1.5.1) (2026-08-20)
+
+
+### Bug Fixes
+
+* show and select the latest compatible Discord versions ([38af9e7](https://github.com/Retribution-Mod/retribution-manager/commit/38af9e7d7b77ab36a174f9cb88e625c578d046ae))
+
 # [1.5.0](https://github.com/Retribution-Mod/retribution-manager/compare/v1.4.0...v1.5.0) (2026-08-20)
 
 
