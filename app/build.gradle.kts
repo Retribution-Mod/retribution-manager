@@ -153,35 +153,33 @@ dependencies {
 }
 
 fun getCurrentBranch(): String? =
-    exec("git", "symbolic-ref", "--short", "HEAD")
+    runCommand("git", "symbolic-ref", "--short", "HEAD")
 
 fun getLatestCommit(): String? =
-    exec("git", "rev-parse", "--short", "HEAD")
+    runCommand("git", "rev-parse", "--short", "HEAD")
 
 fun hasLocalCommits(): Boolean {
     val branch = getCurrentBranch() ?: return false
-    return exec("git", "log", "origin/$branch..HEAD")?.isNotBlank() ?: false
+    return runCommand("git", "log", "origin/$branch..HEAD")?.isNotBlank() ?: false
 }
 
 fun hasLocalChanges(): Boolean =
-    exec("git", "status", "-s")?.isNotEmpty() ?: false
+    runCommand("git", "status", "-s")?.isNotEmpty() ?: false
 
-fun exec(vararg command: String): String? {
+fun runCommand(vararg command: String): String? {
     return try {
-        val stdout = ByteArrayOutputStream()
-        val errout = ByteArrayOutputStream()
-
-        exec {
-            commandLine = command.toList()
-            standardOutput = stdout
-            errorOutput = errout
+        val execOutput = providers.exec {
+            commandLine(*command)
             isIgnoreExitValue = true
         }
 
-        if (errout.size() > 0)
-            throw Error(errout.toString(Charsets.UTF_8))
+        val result = execOutput.result.get()
+        if (result.exitValue != 0) {
+            System.err.println("Command ${command.toList()} failed with exit code ${result.exitValue}")
+            return null
+        }
 
-        stdout.toString(Charsets.UTF_8).trim()
+        execOutput.standardOutput.asText.get().trim()
     } catch (e: Throwable) {
         e.printStackTrace()
         null
