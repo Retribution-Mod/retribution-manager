@@ -21,4 +21,9 @@ class DownloadBaseStep(
     override val destination = dir.resolve("base-$version.apk")
     override val workingCopy = workingDir.resolve("base-$version.apk")
 
+    // Enable hash verification for the base APK to prevent trojanized packages
+    override val enforceHashVerification: Boolean = true
+    override val hashFileIdentifier: String = "base"
+    override val hashVersion: String = version
+
 }

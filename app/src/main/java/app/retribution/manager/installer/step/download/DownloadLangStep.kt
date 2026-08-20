@@ -21,4 +21,9 @@ class DownloadLangStep(
     override val destination = dir.resolve("config.en-$version.apk")
     override val workingCopy = workingDir.resolve("config.en-$version.apk")
 
+    // Enable hash verification for the language split
+    override val enforceHashVerification: Boolean = true
+    override val hashFileIdentifier: String = "config.en"
+    override val hashVersion: String = version
+
 }

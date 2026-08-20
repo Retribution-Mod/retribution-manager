@@ -21,4 +21,9 @@ class DownloadResourcesStep(
     override val destination = dir.resolve("config.xxhdpi-$version.apk")
     override val workingCopy = workingDir.resolve("config.xxhdpi-$version.apk")
 
+    // Enable hash verification for the resources split
+    override val enforceHashVerification: Boolean = true
+    override val hashFileIdentifier: String = "config.xxhdpi"
+    override val hashVersion: String = version
+
 }

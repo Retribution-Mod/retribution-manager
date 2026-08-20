@@ -27,4 +27,9 @@ class DownloadLibsStep(
     override val destination = dir.resolve("config.$arch-$version.apk")
     override val workingCopy = workingDir.resolve("config.$arch-$version.apk")
 
+    // Enable hash verification for the native libraries split
+    override val enforceHashVerification: Boolean = true
+    override val hashFileIdentifier: String = "config.$arch"
+    override val hashVersion: String = version
+
 }
