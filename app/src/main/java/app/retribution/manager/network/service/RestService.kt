@@ -2,6 +2,7 @@ package app.retribution.manager.network.service
 
 import app.retribution.manager.domain.manager.PreferenceManager
 import app.retribution.manager.network.dto.Commit
+import app.retribution.manager.network.dto.FileHash
 import app.retribution.manager.network.dto.Index
 import app.retribution.manager.network.dto.InstallableVersions
 import app.retribution.manager.network.dto.Release
@@ -37,6 +38,12 @@ class RestService(
         httpService.request<List<Commit>> {
             url("https://api.github.com/repos/$repo/commits")
             parameter("page", page)
+        }
+    }
+
+    suspend fun getFileHash(mirrorBaseUrl: String, version: String, file: String) = withContext(Dispatchers.IO) {
+        httpService.request<FileHash> {
+            url("$mirrorBaseUrl/tracker/hash/$version/$file")
         }
     }
 

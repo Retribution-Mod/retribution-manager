@@ -14,6 +14,9 @@ import app.retribution.manager.installer.step.Step
 import app.retribution.manager.installer.step.StepGroup
 import app.retribution.manager.installer.step.StepRunner
 import app.retribution.manager.installer.step.StepStatus
+import app.retribution.manager.installer.util.HashUtil
+import app.retribution.manager.network.service.RestService
+import app.retribution.manager.network.utils.ApiResponse
 import app.retribution.manager.utils.mainThread
 import app.retribution.manager.utils.showToast
 import kotlinx.coroutines.CancellationException
@@ -33,6 +36,7 @@ abstract class DownloadStep : Step() {
 
     private val downloadManager: DownloadManager by inject()
     private val context: Context by inject()
+    private val restService: RestService by inject()
 
     /**
      * Url of the desired file to download
@@ -53,6 +57,24 @@ abstract class DownloadStep : Step() {
      * Where the downloaded file should be copied to so that it can be used for patching
      */
     abstract val workingCopy: File
+
+    /**
+     * Whether hash verification should be enforced for this download
+     * Override to true for security-critical downloads like base APKs
+     */
+    open val enforceHashVerification: Boolean = false
+
+    /**
+     * The file identifier used for hash lookup (e.g., "base", "config.xxhdpi")
+     * Only needed if enforceHashVerification is true
+     */
+    open val hashFileIdentifier: String? = null
+
+    /**
+     * The version string used for hash lookup
+     * Only needed if enforceHashVerification is true
+     */
+    open val hashVersion: String? = null
 
     override val group: StepGroup = StepGroup.DL
 
@@ -109,6 +131,49 @@ abstract class DownloadStep : Step() {
             error("Downloaded file is empty: ${destination.absolutePath}")
     }
 
+    /**
+     * Verifies the hash of a downloaded file against the expected hash from the tracker
+     */
+    protected suspend fun verifyHash(runner: StepRunner, mirrorBaseUrl: String) {
+        if (!enforceHashVerification || hashFileIdentifier == null || hashVersion == null) {
+            return
+        }
+
+        runner.logger.i("Fetching expected hash for ${destination.name}")
+        
+        val hashResponse = restService.getFileHash(mirrorBaseUrl, hashVersion!!, hashFileIdentifier!!)
+        
+        when (hashResponse) {
+            is ApiResponse.Success -> {
+                val expectedHash = hashResponse.data.sha256
+                runner.logger.i("Expected SHA-256: $expectedHash")
+                
+                runner.logger.i("Computing SHA-256 hash of ${destination.name}")
+                val actualHash = HashUtil.computeSha256(destination)
+                runner.logger.i("Actual SHA-256: $actualHash")
+                
+                if (!actualHash.equals(expectedHash, ignoreCase = true)) {
+                    destination.delete()
+                    error("Hash verification failed for ${destination.name}. Expected: $expectedHash, Got: $actualHash. The downloaded file may have been tampered with.")
+                }
+                
+                runner.logger.i("Hash verification successful for ${destination.name}")
+            }
+            is ApiResponse.Error -> {
+                runner.logger.w("Failed to fetch hash from tracker (HTTP ${hashResponse.error.status}). Hash verification skipped.")
+                if (enforceHashVerification) {
+                    runner.logger.w("WARNING: Hash verification is enforced but hash could not be retrieved. Proceeding without verification.")
+                }
+            }
+            is ApiResponse.Failure -> {
+                runner.logger.w("Failed to fetch hash from tracker: ${hashResponse.error.throwable.message}. Hash verification skipped.")
+                if (enforceHashVerification) {
+                    runner.logger.w("WARNING: Hash verification is enforced but hash could not be retrieved. Proceeding without verification.")
+                }
+            }
+        }
+    }
+
     override suspend fun run(runner: StepRunner) {
         val fileName = destination.name
         runner.logger.i("Checking if $fileName is cached")
@@ -116,17 +181,37 @@ abstract class DownloadStep : Step() {
             runner.logger.i("Checking if $fileName isn't empty")
             if (destination.length() > 0) {
                 runner.logger.i("$fileName is cached")
-                cached = true
-
-                runner.logger.i("Moving $fileName to working directory")
-                destination.copyTo(workingCopy, true)
-
-                status = StepStatus.SUCCESSFUL
-                return
+                
+                // Verify hash of cached file if enforcement is enabled
+                if (enforceHashVerification && downloadMirrorUrlPath != null) {
+                    try {
+                        verifyHash(runner, preferenceManager.mirror.baseUrl)
+                    } catch (e: Exception) {
+                        runner.logger.e("Cached file failed hash verification: ${e.message}")
+                        runner.logger.i("Deleting invalid cached file: $fileName")
+                        destination.delete()
+                        // Continue to download fresh copy
+                    }
+                    
+                    // If file still exists after hash check, it's valid
+                    if (destination.exists()) {
+                        cached = true
+                        runner.logger.i("Moving $fileName to working directory")
+                        destination.copyTo(workingCopy, true)
+                        status = StepStatus.SUCCESSFUL
+                        return
+                    }
+                } else {
+                    cached = true
+                    runner.logger.i("Moving $fileName to working directory")
+                    destination.copyTo(workingCopy, true)
+                    status = StepStatus.SUCCESSFUL
+                    return
+                }
+            } else {
+                runner.logger.i("Deleting empty file: $fileName")
+                destination.delete()
             }
-
-            runner.logger.i("Deleting empty file: $fileName")
-            destination.delete()
         }
 
         runner.logger.i("$fileName was not properly cached, downloading now")
@@ -138,6 +223,11 @@ abstract class DownloadStep : Step() {
         }
 
         var successfulDownload = download(downloadUrl!!, destination, runner)
+        var usedMirrorBaseUrl = if (downloadMirrorUrlPath != null) {
+            preferenceManager.mirror.baseUrl
+        } else {
+            null
+        }
 
         // If the current mirror fails, try other mirrors
         if (!successfulDownload && downloadMirrorUrlPath != null) {
@@ -147,6 +237,7 @@ abstract class DownloadStep : Step() {
         
                 if (download(downloadUrl, destination, runner)) {
                     preferenceManager.mirror = mirror
+                    usedMirrorBaseUrl = mirror.baseUrl
                     successfulDownload = true
                     break
                 }
@@ -164,6 +255,12 @@ abstract class DownloadStep : Step() {
         try {
             runner.logger.i("Verifying downloaded file")
             verify()
+            
+            // Verify hash if this is a mirror download and enforcement is enabled
+            if (usedMirrorBaseUrl != null && enforceHashVerification) {
+                verifyHash(runner, usedMirrorBaseUrl)
+            }
+            
             runner.logger.i("$fileName downloaded successfully")
         } catch (t: Throwable) {
             mainThread {
