@@ -27,7 +27,6 @@ fun InstallChooserDialog(
     onInstall: (version: DiscordVersion, packageName: String?, appName: String?) -> Unit
 ) {
     val oldVersions = installableVersions.filter { it.second < DiscordVersion(341, 0, DiscordVersion.Type.STABLE) }
-    val newVersions = installableVersions.filter { it.second >= DiscordVersion(341, 0, DiscordVersion.Type.STABLE) }
 
     fun choose(version: DiscordVersion, pkg: String?, name: String?) {
         onInstall(version, pkg, name)
@@ -61,13 +60,13 @@ fun InstallChooserDialog(
                     Column {
                         Text(stringResource(R.string.install_classic_new))
                         Text(
-                            text = stringResource(R.string.channel_stable),
+                            text = latestVersion.toString(),
                             style = MaterialTheme.typography.bodySmall
                         )
                     }
                 }
 
-                val old = oldVersions.firstOrNull()
+                val old = oldVersions.maxByOrNull { it.second }
                 if (old != null) {
                     Button(
                         onClick = { choose(old.second, null, null) },
