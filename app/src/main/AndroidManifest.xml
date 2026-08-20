@@ -65,6 +65,20 @@
                 <category android:name="android.intent.category.BROWSABLE"/>
                 <data android:scheme="retribution"/>
             </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+                <data android:scheme="manager" android:host="bundle" android:pathPattern="/.*"/>
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+                <data android:scheme="plugin"/>
+                <data android:scheme="theme"/>
+                <data android:scheme="font"/>
+            </intent-filter>
         </activity>
 
         <service android:name=".installer.session.InstallService"/>

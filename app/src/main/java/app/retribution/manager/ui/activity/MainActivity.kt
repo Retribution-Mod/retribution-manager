@@ -4,12 +4,14 @@ import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.core.app.ActivityCompat
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import app.retribution.manager.BuildConfig
+// import app.retribution.manager.R
 import app.retribution.manager.ui.screen.home.HomeScreen
 import app.retribution.manager.ui.screen.installer.InstallerScreen
 import app.retribution.manager.ui.theme.RetributionManagerTheme
@@ -26,16 +28,38 @@ class MainActivity : ComponentActivity() {
 
         val deepLink = if (intent?.action == Intent.ACTION_VIEW) intent.data else null
 
-        // Forward retribution://{bundle,plugin,theme,font}?url=... to the patched Discord app
-        // so the client/XPosed module can handle the deep link there.
-        when (deepLink?.host) {
-            "bundle", "plugin", "theme", "font" -> {
-                packageManager.getLaunchIntentForPackage(BuildConfig.MODDED_APP_PACKAGE_NAME)?.let { launch ->
-                    launch.data = deepLink
-                    startActivity(launch)
+        when (deepLink?.scheme) {
+            "manager" -> {
+                if (deepLink.host == "bundle") {
+                    val version = deepLink.path?.trim('/')?.substringAfterLast('/')?.takeIf { it.isNotBlank() }
+                    if (version != null) {
+                        val screen = DiscordVersion.fromVersionCode(version)?.let {
+                            InstallerScreen(it, null)
+                        } ?: HomeScreen()
+                        setContent {
+                            RetributionManagerTheme {
+                                Navigator(screen) {
+                                    SlideTransition(it)
+                                }
+                            }
+                        }
+                    } else {
+                        finish()
+                    }
+                    return
                 }
-                finish()
+            }
+            "plugin", "theme", "font" -> {
+                forwardToModdedDiscord(deepLink)
                 return
+            }
+            "retribution" -> {
+                when (deepLink.host) {
+                    "bundle", "plugin", "theme", "font" -> {
+                        forwardToModdedDiscord(deepLink)
+                        return
+                    }
+                }
             }
         }
 
@@ -71,5 +95,16 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
+    }
+
+    private fun forwardToModdedDiscord(deepLink: android.net.Uri) {
+        val launch = packageManager.getLaunchIntentForPackage(BuildConfig.MODDED_APP_PACKAGE_NAME)
+        if (launch != null) {
+            launch.data = deepLink
+            startActivity(launch)
+        } else {
+            Toast.makeText(this, "Modded Discord not installed. Install it through the manager first.", Toast.LENGTH_LONG).show()
+        }
+        finish()
     }
 }
