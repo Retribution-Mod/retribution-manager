@@ -1,3 +1,10 @@
+# [1.3.0](https://github.com/Retribution-Mod/retribution-manager/compare/v1.2.1...v1.3.0) (2026-08-19)
+
+
+### Features
+
+* replace app icons with new manager (fist/sword) and bundle (eye) logos ([9c025fe](https://github.com/Retribution-Mod/retribution-manager/commit/9c025fe633744a4ff0e61199d1b7de42cc30ae0c))
+
 ## [1.2.1](https://github.com/Retribution-Mod/retribution-manager/compare/v1.2.0...v1.2.1) (2026-08-19)
 
 
