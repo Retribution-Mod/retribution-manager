@@ -1,3 +1,10 @@
+# [1.4.0](https://github.com/Retribution-Mod/retribution-manager/compare/v1.3.0...v1.4.0) (2026-08-20)
+
+
+### Features
+
+* install chooser for Old/New/Next variants with separate Next package ([60e406b](https://github.com/Retribution-Mod/retribution-manager/commit/60e406b82b2a2a1b70cfb633de32c7920551755e))
+
 # [1.3.0](https://github.com/Retribution-Mod/retribution-manager/compare/v1.2.1...v1.3.0) (2026-08-19)
 
 
