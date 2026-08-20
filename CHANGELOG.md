@@ -1,3 +1,15 @@
+# [1.5.0](https://github.com/Retribution-Mod/retribution-manager/compare/v1.4.0...v1.5.0) (2026-08-20)
+
+
+### Bug Fixes
+
+* replace deprecated Project.exec in build script with providers.exec for Gradle 9 compatibility ([ba1c1df](https://github.com/Retribution-Mod/retribution-manager/commit/ba1c1df6b7b7c30191d03adf67953631e1d1fd8f))
+
+
+### Features
+
+* add plugin:// theme:// font:// and manager://bundle deep link intent filters and routing ([7977226](https://github.com/Retribution-Mod/retribution-manager/commit/79772260442a1f8bdea35b5f35f9db1af2fae4d6))
+
 # [1.4.0](https://github.com/Retribution-Mod/retribution-manager/compare/v1.3.0...v1.4.0) (2026-08-20)
 
 
