@@ -52,6 +52,9 @@ class HomeViewModel(
     var discordVersions by mutableStateOf<Map<DiscordVersion.Type, DiscordVersion?>?>(null)
         private set
 
+    var installableVersions by mutableStateOf<List<Pair<String, DiscordVersion>>>(emptyList())
+        private set
+
     var release by mutableStateOf<Release?>(null)
         private set
 
@@ -70,6 +73,11 @@ class HomeViewModel(
     fun getDiscordVersions() {
         screenModelScope.launch {
             discordVersions = repo.getLatestDiscordVersions().dataOrNull
+            repo.getInstallableVersions().ifSuccessful { list ->
+                installableVersions = list.versions.mapNotNull { v ->
+                    DiscordVersion.fromVersionCode(v.code)?.let { v.name to it }
+                }
+            }
             if (prefs.autoClearCache) autoClearCache()
         }
     }

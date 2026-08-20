@@ -3,6 +3,7 @@ package app.retribution.manager.network.service
 import app.retribution.manager.domain.manager.PreferenceManager
 import app.retribution.manager.network.dto.Commit
 import app.retribution.manager.network.dto.Index
+import app.retribution.manager.network.dto.InstallableVersions
 import app.retribution.manager.network.dto.Release
 import io.ktor.client.request.parameter
 import io.ktor.client.request.url
@@ -23,6 +24,12 @@ class RestService(
     suspend fun getLatestDiscordVersions() = withContext(Dispatchers.IO) {
         httpService.request<Index> {
             url("${prefs.mirror.baseUrl}/tracker/index")
+        }
+    }
+
+    suspend fun getInstallableVersions() = withContext(Dispatchers.IO) {
+        httpService.request<InstallableVersions> {
+            url("https://retribution-website.allyapp.workers.dev/api/discord-versions")
         }
     }
 

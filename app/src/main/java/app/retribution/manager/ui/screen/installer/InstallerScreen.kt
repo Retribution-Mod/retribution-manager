@@ -52,7 +52,9 @@ import java.util.UUID
 
 class InstallerScreen(
     val version: DiscordVersion,
-    val customModUrl: String? = null
+    val customModUrl: String? = null,
+    val packageName: String? = null,
+    val appName: String? = null
 ) : Screen {
 
     override val key: ScreenKey = "Installer-${UUID.randomUUID()}"
@@ -62,7 +64,7 @@ class InstallerScreen(
         val nav = LocalNavigator.currentOrThrow
         val activity = LocalContext.current as? ComponentActivity
         val viewModel: InstallerViewModel = getScreenModel {
-            parametersOf(version, customModUrl)
+            parametersOf(version, customModUrl, packageName, appName)
         }
 
         LaunchedEffect(viewModel.runner.currentStep) {
@@ -106,7 +108,7 @@ class InstallerScreen(
                 onTryAgainClick = {
                     viewModel.dismissDownloadFailedDialog()
                     viewModel.cancelInstall()
-                    nav.replace(InstallerScreen(version, customModUrl))
+                    nav.replace(InstallerScreen(version, customModUrl, packageName, appName))
                 },
                 onDismiss = {
                     viewModel.dismissDownloadFailedDialog()

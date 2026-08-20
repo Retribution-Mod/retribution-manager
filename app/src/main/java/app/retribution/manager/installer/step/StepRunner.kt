@@ -39,7 +39,9 @@ import java.io.File
 @Stable
 class StepRunner(
     private val discordVersion: DiscordVersion,
-    private val customModUrl: String? = null
+    private val customModUrl: String? = null,
+    val packageName: String? = null,
+    val appName: String? = null,
 ): KoinComponent {
 
     private val preferenceManager: PreferenceManager by inject()

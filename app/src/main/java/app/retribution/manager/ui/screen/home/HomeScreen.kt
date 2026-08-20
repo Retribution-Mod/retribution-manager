@@ -47,6 +47,7 @@ import app.retribution.manager.ui.screen.settings.SettingsScreen
 import app.retribution.manager.ui.viewmodel.home.HomeViewModel
 import app.retribution.manager.ui.widgets.AppIcon
 import app.retribution.manager.ui.widgets.dialog.BatteryOptimizationDialog
+import app.retribution.manager.ui.widgets.dialog.InstallChooserDialog
 import app.retribution.manager.ui.widgets.dialog.StoragePermissionsDialog
 import app.retribution.manager.ui.widgets.home.CommitList
 import app.retribution.manager.ui.widgets.updater.UpdateDialog
@@ -66,6 +67,8 @@ class HomeScreen : Screen {
         val navigator = LocalNavigator.currentOrThrow
         val prefs: PreferenceManager = get()
         val viewModel: HomeViewModel = getScreenModel()
+
+        var showInstallDialog by remember { mutableStateOf(false) }
 
         val currentVersion = remember {
             DiscordVersion.fromVersionCode(viewModel.installManager.current?.versionCode.toString())
@@ -156,9 +159,7 @@ class HomeScreen : Screen {
                 }
 
                 Button(
-                    onClick = {
-                        navigator.navigate(InstallerScreen(latestVersion!!))
-                    },
+                    onClick = { showInstallDialog = true },
                     enabled = latestVersion != null && (prefs.allowDowngrade || latestVersion >= (currentVersion ?: Constants.DUMMY_VERSION)),
                     modifier = Modifier.fillMaxWidth()
                 ) {
@@ -177,6 +178,18 @@ class HomeScreen : Screen {
                         modifier = Modifier
                             .basicMarquee()
                             .fillMaxWidth()
+                    )
+                }
+
+                if (showInstallDialog && latestVersion != null) {
+                    InstallChooserDialog(
+                        latestVersion = latestVersion,
+                        installableVersions = viewModel.installableVersions,
+                        prefs = prefs,
+                        onDismiss = { showInstallDialog = false },
+                        onInstall = { version, pkg, name ->
+                            navigator.navigate(InstallerScreen(version, packageName = pkg, appName = name))
+                        }
                     )
                 }
 

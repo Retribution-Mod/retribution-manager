@@ -10,8 +10,8 @@ import org.koin.core.module.dsl.factoryOf
 import org.koin.dsl.module
 
 val viewModelModule = module {
-    factory { (discordVersion: DiscordVersion, customModUrl: String?) ->
-        InstallerViewModel(get(), get(), discordVersion, customModUrl)
+    factory { (discordVersion: DiscordVersion, customModUrl: String?, packageName: String?, appName: String?) ->
+        InstallerViewModel(get(), get(), discordVersion, customModUrl, packageName, appName)
     }
     factoryOf(::AdvancedSettingsViewModel)
     factoryOf(::HomeViewModel)

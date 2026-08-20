@@ -63,6 +63,12 @@
     <string name="action_copy_logs">Copy logs</string>
     <string name="action_clear_cache">Clear cache</string>
     <string name="action_confirm">Confirm</string>
+    <string name="action_cancel">Cancel</string>
+    <string name="title_choose_install">Choose install</string>
+    <string name="msg_install_chooser">Pick which Discord build to patch. Next installs as a separate app.</string>
+    <string name="install_classic_new">Classic — New (&gt;= 341)</string>
+    <string name="install_classic_old">Classic — Old (&lt; 340)</string>
+    <string name="install_next">Next</string>
     <string name="action_start_update">Start update</string>
     <string name="action_install">Install</string>
     <string name="action_update">Update</string>

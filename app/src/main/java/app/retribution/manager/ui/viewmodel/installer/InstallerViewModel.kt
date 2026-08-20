@@ -30,10 +30,12 @@ class InstallerViewModel(
     private val context: Context,
     private val installManager: InstallManager,
     discordVersion: DiscordVersion,
-    customModUrl: String? = null
+    customModUrl: String? = null,
+    packageName: String? = null,
+    appName: String? = null
 ) : ScreenModel {
 
-    val runner = StepRunner(discordVersion, customModUrl)
+    val runner = StepRunner(discordVersion, customModUrl, packageName, appName)
 
     val groupedSteps: ImmutableMap<StepGroup, List<Step>> = StepGroup.entries
         .associateWith { group ->

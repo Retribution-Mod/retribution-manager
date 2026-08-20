@@ -20,4 +20,6 @@ class RestRepository(
 
     suspend fun getCommits(repo: String, page: Int = 1) = service.getCommits(repo, page)
 
+    suspend fun getInstallableVersions() = service.getInstallableVersions()
+
 }

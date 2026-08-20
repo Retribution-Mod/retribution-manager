@@ -38,16 +38,18 @@ class PatchManifestsStep : Step() {
 
             ZipWriter(apk, true).use { zip ->
                 runner.logger.i("Changing package and app name in ${apk.name}")
+                val packageName = runner.packageName ?: preferences.packageName
+                val appName = runner.appName ?: preferences.appName
                 val patchedManifestBytes = if (apk == baseApk) {
                     ManifestPatcher.patchManifest(
                         manifestBytes = manifest,
-                        packageName = preferences.packageName,
-                        appName = preferences.appName,
+                        packageName = packageName,
+                        appName = appName,
                         debuggable = preferences.debuggable,
                     )
                 } else {
                     runner.logger.i("Changing package name in ${apk.name}")
-                    ManifestPatcher.renamePackage(manifest, preferences.packageName)
+                    ManifestPatcher.renamePackage(manifest, packageName)
                 }
 
                 runner.logger.i("Deleting old AndroidManifest.xml in ${apk.name}")
