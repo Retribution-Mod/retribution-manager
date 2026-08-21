@@ -23,7 +23,6 @@ import app.retribution.manager.ui.screen.home.HomeScreen
 import app.retribution.manager.ui.screen.installer.InstallerScreen
 import app.retribution.manager.ui.theme.RetributionManagerTheme
 import app.retribution.manager.utils.DiscordVersion
-import app.retribution.manager.utils.Intents
 import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.transitions.SlideTransition
 
@@ -48,12 +47,10 @@ class MainActivity : ComponentActivity() {
 
             else -> {
                 val version = when (intent?.action) {
-                    Intents.Actions.INSTALL -> intent.getStringExtra(Intents.Extras.VERSION)
                     Intent.ACTION_VIEW -> deepLink?.getQueryParameter("version")
                     else -> null
                 }
                 val customUrl = when (intent?.action) {
-                    Intents.Actions.INSTALL -> intent.getStringExtra(Intents.Extras.URL)
                     Intent.ACTION_VIEW -> deepLink?.getQueryParameter("url")
                     else -> null
                 }

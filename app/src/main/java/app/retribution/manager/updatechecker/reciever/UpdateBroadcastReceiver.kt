@@ -6,8 +6,8 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import androidx.core.app.NotificationCompat
-import app.retribution.manager.BuildConfig
 import app.retribution.manager.R
+import app.retribution.manager.ui.activity.InstallActivity
 import app.retribution.manager.utils.Channels
 import app.retribution.manager.utils.DiscordVersion
 import app.retribution.manager.utils.Intents
@@ -24,7 +24,7 @@ class UpdateBroadcastReceiver : BroadcastReceiver() {
         val clickIntent = PendingIntent.getActivity(
             context,
             notificationId,
-            context.packageManager.getLaunchIntentForPackage(BuildConfig.APPLICATION_ID)!!.apply {
+            Intent(context, InstallActivity::class.java).apply {
                 action = Intents.Actions.INSTALL
                 putExtra(Intents.Extras.VERSION, versionCode)
                 addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)

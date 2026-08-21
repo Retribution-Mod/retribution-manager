@@ -23,7 +23,7 @@ jobs:
           java-version: "17"
 
       - name: Cache Gradle
-        uses: burrunan/gradle-cache-action@v2
+        uses: burrunan/gradle-cache-action@c15634bb25b7284dc084f38dff4e838048b7feaf # v2
 
       - name: Build
         env:

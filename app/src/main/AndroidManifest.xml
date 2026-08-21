@@ -37,6 +37,7 @@
             android:enableOnBackInvokedCallback="true"
             android:fullBackupContent="@xml/backup_rules"
             android:localeConfig="@xml/locales_config"
+            android:networkSecurityConfig="@xml/network_security_config"
             android:largeHeap="true"
             android:icon="@mipmap/ic_launcher"
             android:label="@string/app_name"
@@ -54,10 +55,6 @@
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
-            </intent-filter>
-            <intent-filter>
-                <action android:name="app.retribution.actions.INSTALL"/>
-                <category android:name="android.intent.category.OPENABLE"/>
             </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
@@ -78,6 +75,16 @@
                 <data android:scheme="plugin"/>
                 <data android:scheme="theme"/>
                 <data android:scheme="font"/>
+            </intent-filter>
+        </activity>
+
+        <activity
+                android:name=".ui.activity.InstallActivity"
+                android:exported="false"
+                android:theme="@style/Theme.Manager">
+            <intent-filter>
+                <action android:name="app.retribution.manager.intents.actions.INSTALL"/>
+                <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
         </activity>
 

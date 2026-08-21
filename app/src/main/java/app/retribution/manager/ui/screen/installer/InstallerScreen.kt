@@ -1,7 +1,11 @@
 package app.retribution.manager.ui.screen.installer
 
+import android.content.BroadcastReceiver
+import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import androidx.activity.ComponentActivity
+import androidx.core.content.ContextCompat
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -62,7 +66,8 @@ class InstallerScreen(
     @Composable
     override fun Content() {
         val nav = LocalNavigator.currentOrThrow
-        val activity = LocalContext.current as? ComponentActivity
+        val context = LocalContext.current
+        val activity = context as? ComponentActivity
         val viewModel: InstallerViewModel = getScreenModel {
             parametersOf(version, customModUrl, packageName, appName)
         }
@@ -72,17 +77,25 @@ class InstallerScreen(
         }
 
         // Listen for error messages from InstallService
-        val intentListener: (Intent) -> Unit = remember {
-            {
-                val msg = it.getStringExtra("Retribution.extras.EXTRA_MESSAGE")
-                if (msg?.isNotBlank() == true) viewModel.logError(msg)
+        val messageReceiver = remember {
+            object : BroadcastReceiver() {
+                override fun onReceive(context: Context, intent: Intent) {
+                    val msg = intent.getStringExtra("Retribution.extras.EXTRA_MESSAGE")
+                    if (msg?.isNotBlank() == true) viewModel.logError(msg)
+                }
             }
         }
 
         DisposableEffect(Unit) {
-            activity?.addOnNewIntentListener(intentListener)
+            val filter = IntentFilter("Retribution.actions.ACTION_INSTALL_FINISHED")
+            ContextCompat.registerReceiver(
+                context,
+                messageReceiver,
+                filter,
+                ContextCompat.RECEIVER_NOT_EXPORTED
+            )
             onDispose {
-                activity?.removeOnNewIntentListener(intentListener)
+                context.unregisterReceiver(messageReceiver)
             }
         }
 
