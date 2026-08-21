@@ -40,6 +40,7 @@ class UpdateWorker(
                             UpdateBroadcastReceiver::class.java
                         ).apply {
                             putExtra(Intents.Extras.VERSION, latestVersion.toVersionCode())
+                            setPackage(context.packageName)
                         })
                 }
 

@@ -78,22 +78,25 @@ class DownloadModStep(
         }
         
         /**
-         * Validates and returns a safe module URL.
-         * If the custom URL is provided but not trusted, returns null to trigger an error.
-         * 
+         * Validates a custom module URL.
+         * Returns the custom URL if trusted, otherwise null.
+         *
          * @param customModUrl The custom URL to validate
-         * @return The validated URL or default URL, or null if validation fails
+         * @return The validated URL or null if rejected
          */
-        private fun getValidatedModuleUrl(customModUrl: String?): String? {
-            return when {
-                customModUrl == null -> DEFAULT_MODULE_URL
-                isUrlTrusted(customModUrl) -> customModUrl
-                else -> null // Reject untrusted URLs
-            }
+        private fun getValidatedModuleUrl(customModUrl: String): String? {
+            return if (isUrlTrusted(customModUrl)) customModUrl else null
         }
     }
 
-    override val downloadFullUrl: String? = getValidatedModuleUrl(customModUrl)
+    override val downloadFullUrl: String? = if (customModUrl != null) {
+        getValidatedModuleUrl(customModUrl)
+    } else if (preferenceManager.moduleVersion.isNotBlank()) {
+        // Use the exact release tag to avoid stale "latest/download" redirects
+        "https://github.com/Retribution-Mod/retribution-xposed/releases/download/${preferenceManager.moduleVersion}/app-release.apk"
+    } else {
+        DEFAULT_MODULE_URL
+    }
 
     override val nameRes = R.string.step_dl_mod
 

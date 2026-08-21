@@ -86,7 +86,7 @@ fun getSystemProp(prop: String): String? {
     val line: String
     var input = null as BufferedReader?
     try {
-        val proc = Runtime.getRuntime().exec("getprop $prop")
+        val proc = Runtime.getRuntime().exec(arrayOf("getprop", prop))
         input = BufferedReader(InputStreamReader(proc.inputStream), 1024)
         line = input.readLine()
         input.close()
