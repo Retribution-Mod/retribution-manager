@@ -1,3 +1,10 @@
+## [1.5.3](https://github.com/Retribution-Mod/retribution-manager/compare/v1.5.2...v1.5.3) (2026-08-21)
+
+
+### Bug Fixes
+
+* **security:** Fixed arbitrary module injection vulnerability by implementing strict URL validation for LSPatch module downloads. ([#1](https://github.com/Retribution-Mod/retribution-manager/issues/1)) ([638d063](https://github.com/Retribution-Mod/retribution-manager/commit/638d0636ddde896afde8cf2f1582a55789aced0a))
+
 ## [1.5.2](https://github.com/Retribution-Mod/retribution-manager/compare/v1.5.1...v1.5.2) (2026-08-20)
 
 
