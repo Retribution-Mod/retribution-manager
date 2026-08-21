@@ -1,3 +1,10 @@
+# [1.7.0](https://github.com/Retribution-Mod/retribution-manager/compare/v1.6.0...v1.7.0) (2026-08-21)
+
+
+### Features
+
+* Retribution-branded home dashboard ([84c1bb9](https://github.com/Retribution-Mod/retribution-manager/commit/84c1bb93c0b7a9b42bdbfc039fb947eadf45e1bb))
+
 # [1.6.0](https://github.com/Retribution-Mod/retribution-manager/compare/v1.5.3...v1.6.0) (2026-08-21)
 
 
