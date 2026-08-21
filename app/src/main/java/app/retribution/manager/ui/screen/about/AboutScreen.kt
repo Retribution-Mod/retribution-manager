@@ -192,6 +192,54 @@ class AboutScreen : Screen {
                     modifier = Modifier.padding(horizontal = 16.dp)
                 ) {
                     ElevatedCard {
+                       ListItem(
+                            text = "Palm",
+                            subtext = "Lead Developer of Revenge",
+                            imageUrl = "https://github.com/PalmDevs.png",
+                            onClick = {
+                                uriHandler.openUri("https://github.com/PalmDevs")
+                            }
+                        )
+                       ListItem(
+                            text = "oSumAtrIX",
+                            subtext = "Developer of Revenge",
+                            imageUrl = "https://github.com/oSumAtrIX.png",
+                            onClick = {
+                                uriHandler.openUri("https://github.com/oSumAtrIX")
+                            }
+                        )
+                       ListItem(
+                            text = "Nexpid",
+                            subtext = "Developer of Revenge",
+                            imageUrl = "https://github.com/nexpid.png",
+                            onClick = {
+                                uriHandler.openUri("https://github.com/nexpid")
+                            }
+                        )
+                        ListItem(
+                            text = "madkarmaa",
+                            subtext = "Revenge Team",
+                            imageUrl = "https://github.com/madkarmaa.png",
+                            onClick = {
+                                uriHandler.openUri("https://github.com/madkarmaa")
+                            }
+                        )
+                        ListItem(
+                            text = "Ushie",
+                            subtext = "Revenge Team",
+                            imageUrl = "https://github.com/Ushie.png",
+                            onClick = {
+                                uriHandler.openUri("https://github.com/Ushie")
+                            }
+                        )
+                        ListItem(
+                            text = "validcube",
+                            subtext = "Revenge Team",
+                            imageUrl = "https://github.com/validcube.png",
+                            onClick = {
+                                uriHandler.openUri("https://github.com/validcube")
+                            }
+                        )
                         ListItem(
                             text = "Pylix",
                             subtext = "Past developer of Bunny",
