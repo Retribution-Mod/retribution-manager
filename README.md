@@ -77,4 +77,8 @@ You can find the documentation of Retribution Manager [here](/docs).
 
 ## 📜 Licence
 
+Retribution Manager is a derivative of [revenge-mod/revenge-manager](https://github.com/revenge-mod/revenge-manager), which is a fork of [bunny-mod/BunnyManager](https://github.com/bunny-mod/BunnyManager).
+
+See [ATTRIBUTION.md](ATTRIBUTION.md) for the full attribution and license details for the original work.
+
 Retribution Manager is licensed under the OSLv3 license. Please see the [license file](LICENSE) for more information.
