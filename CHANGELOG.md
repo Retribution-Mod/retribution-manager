@@ -1,3 +1,10 @@
+## [1.8.1](https://github.com/Retribution-Mod/retribution-manager/compare/v1.8.0...v1.8.1) (2026-08-21)
+
+
+### Bug Fixes
+
+* **aikido:** isolate install intent, pin actions, add network security config ([25f584d](https://github.com/Retribution-Mod/retribution-manager/commit/25f584dbedc1e29345bf1082d134e7e1da07ccb0))
+
 # [1.8.0](https://github.com/Retribution-Mod/retribution-manager/compare/v1.7.0...v1.8.0) (2026-08-21)
 
 
