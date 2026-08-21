@@ -1,3 +1,10 @@
+# [1.8.0](https://github.com/Retribution-Mod/retribution-manager/compare/v1.7.0...v1.8.0) (2026-08-21)
+
+
+### Features
+
+* deep-link preview + bundle update tile + branded dashboard ([03c23f3](https://github.com/Retribution-Mod/retribution-manager/commit/03c23f3b4df59e1b52f628d2d7bb3ddf42154355))
+
 # [1.7.0](https://github.com/Retribution-Mod/retribution-manager/compare/v1.6.0...v1.7.0) (2026-08-21)
 
 
