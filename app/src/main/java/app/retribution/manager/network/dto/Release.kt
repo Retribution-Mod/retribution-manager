@@ -7,6 +7,7 @@ import kotlinx.serialization.Serializable
 data class Release(
     @SerialName("tag_name") val tagName: String,
     @SerialName("name") val versionName: String,
+    @SerialName("html_url") val htmlUrl: String,
     @SerialName("assets") val assets: List<Asset>
 )
 

@@ -1,5 +1,7 @@
 package app.retribution.manager.ui.screen.home
 
+import android.content.Intent
+import android.net.Uri
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.basicMarquee
 import androidx.compose.foundation.layout.Arrangement
@@ -265,6 +267,46 @@ class HomeScreen : Screen {
                             navigator.navigate(InstallerScreen(version, packageName = pkg, appName = name))
                         }
                     )
+                }
+
+                viewModel.bundleRelease?.let { bundle ->
+                    Card(
+                        modifier = Modifier.fillMaxWidth(),
+                        colors = CardDefaults.cardColors(containerColor = Color(0xFF1A1A1A)),
+                        shape = RoundedCornerShape(20.dp)
+                    ) {
+                        Column(
+                            verticalArrangement = Arrangement.spacedBy(8.dp),
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(16.dp)
+                        ) {
+                            Text(
+                                text = "Retribution Bundle",
+                                style = MaterialTheme.typography.titleMedium,
+                                color = Color(0xFFFF6B35)
+                            )
+                            Text(
+                                text = bundle.versionName,
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = Color.White
+                            )
+                            Text(
+                                text = bundle.tagName,
+                                style = MaterialTheme.typography.labelLarge,
+                                color = Color.White.copy(alpha = 0.6f)
+                            )
+                            TextButton(
+                                onClick = {
+                                    viewModel.context.startActivity(
+                                        Intent(Intent.ACTION_VIEW, Uri.parse(bundle.htmlUrl))
+                                    )
+                                }
+                            ) {
+                                Text("View release", color = Color(0xFFFF6B35))
+                            }
+                        }
+                    }
                 }
 
                 ElevatedCard(

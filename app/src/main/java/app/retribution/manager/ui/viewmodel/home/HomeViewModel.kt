@@ -61,6 +61,8 @@ class HomeViewModel(
     var moduleUpdateRelease by mutableStateOf<Release?>(null)
     var showModuleUpdateDialog by mutableStateOf(false)
 
+    var bundleRelease by mutableStateOf<Release?>(null)
+
     private var updateDownloadUrl by mutableStateOf<String?>(null)
     var showUpdateDialog by mutableStateOf(false)
     var isUpdating by mutableStateOf(false)
@@ -131,6 +133,9 @@ class HomeViewModel(
                 updateDownloadUrl = it.assets.firstOrNull { asset -> asset.name.endsWith(".apk") }?.browserDownloadUrl
                 showUpdateDialog = it.tagName.removePrefix("v") != BuildConfig.VERSION_NAME
             }
+            repo.getLatestRelease("Retribution-Mod/retribution-bundle").ifSuccessful {
+                bundleRelease = it
+            }
             repo.getLatestRelease("Retribution-Mod/retribution-xposed").ifSuccessful {
                 if (prefs.moduleVersion != it.tagName) {
                     moduleUpdateRelease = it
@@ -140,6 +145,7 @@ class HomeViewModel(
                     if (module.exists()) module.delete()
                 }
             }
+
         }
     }
 
