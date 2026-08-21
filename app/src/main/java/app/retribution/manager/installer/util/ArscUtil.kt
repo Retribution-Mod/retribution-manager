@@ -62,11 +62,11 @@ object ArscUtil {
     }
 
     /**
-     * Adds a new color resource to the matching configuration variants in an arsc package.
+     * Adds a new [typeName] resource for matching configuration variants.
      *
-     * @param typeName The type of the resource (ex: `mipmap`, `drawable`, etc.)
+     * @param typeName The resource type (e.g., `mipmap`, `drawable`).
      * @param resourceName The new resource name.
-     * @param configurations A predicate whether to add the value into a matching type chunk.
+     * @param configurations Whether to add the value into a matching type chunk.
      * @param valueType The type of the resource value.
      * @param valueData The raw data of the resource value.
      * @return The resource ID of the newly added resource.

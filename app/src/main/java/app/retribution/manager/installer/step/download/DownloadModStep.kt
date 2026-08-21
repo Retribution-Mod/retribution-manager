@@ -38,50 +38,40 @@ class DownloadModStep(
         )
         
         /**
-         * Validates that a custom module URL is from a trusted source.
-         * 
-         * @param urlString The URL to validate
-         * @return true if the URL is trusted, false otherwise
+         * Checks whether a custom module URL is from a trusted source.
+         * Returns false for anything non-HTTPS, non-GitHub, or outside the expected repo.
          */
         private fun isUrlTrusted(urlString: String): Boolean {
             return try {
                 val url = URL(urlString)
-                
-                // Check protocol is HTTPS
+
                 if (url.protocol != "https") {
                     return false
                 }
-                
-                // Check domain is trusted
+
                 val host = url.host.lowercase()
                 val isTrustedDomain = TRUSTED_DOMAINS.any { trustedDomain ->
                     host == trustedDomain || host.endsWith(".$trustedDomain")
                 }
-                
+
                 if (!isTrustedDomain) {
                     return false
                 }
-                
-                // For GitHub, verify the path matches the official repository
+
                 if (host.contains("github")) {
-                    val path = url.path
                     return TRUSTED_PATH_PREFIXES.any { prefix ->
-                        path.startsWith(prefix)
+                        url.path.startsWith(prefix)
                     }
                 }
-                
+
                 true
             } catch (e: Exception) {
                 false
             }
         }
-        
+
         /**
-         * Validates a custom module URL.
-         * Returns the custom URL if trusted, otherwise null.
-         *
-         * @param customModUrl The custom URL to validate
-         * @return The validated URL or null if rejected
+         * Returns the custom module URL only if it passes [isUrlTrusted].
          */
         private fun getValidatedModuleUrl(customModUrl: String): String? {
             return if (isUrlTrusted(customModUrl)) customModUrl else null

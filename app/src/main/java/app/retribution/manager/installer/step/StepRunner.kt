@@ -30,11 +30,11 @@ import org.koin.core.component.inject
 import java.io.File
 
 /**
- * Runs all installation steps in order
+ * Runs the install steps in order.
  *
  * Credit to rushii (github.com/rushiiMachine)
  *
- * @param discordVersion Version of Discord to inject Retribution into
+ * @param discordVersion Discord version to inject Retribution into.
  */
 @Stable
 class StepRunner(
@@ -60,16 +60,17 @@ class StepRunner(
         """.trimIndent()
 
     /**
-     * Logger associated with this runner
+     * Logger for this installation.
      */
     val logger = Logger("StepRunner").also { logger ->
         debugInfo.split("\n").forEach {
-            logger.logs += LogEntry(it, LogEntry.Level.INFO) // Add debug information to logs but don't print to logcat
+            // Add debug info to the log stream without spamming logcat.
+            logger.logs += LogEntry(it, LogEntry.Level.INFO)
         }
     }
 
     /**
-     * Root directory for all downloaded files
+     * Root cache for downloads.
      */
     private val cacheDir =
         context.externalCacheDir
@@ -78,22 +79,22 @@ class StepRunner(
             .also { it.mkdirs() }
 
     /**
-     * Where version specific downloads are persisted
+     * Version-specific download cache.
      */
     private val discordCacheDir = cacheDir.resolve(discordVersion.toVersionCode())
 
     /**
-     * Working directory where apks are directly modified (i.e. replacing the app icon)
+     * Working directory where APKs are patched before signing.
      */
     private val patchedDir = discordCacheDir.resolve("patched").also { it.deleteRecursively() }
 
     /**
-     * Where apks are moved to once signed
+     * Output directory for signed APKs.
      */
     private val signedDir = discordCacheDir.resolve("signed").also { it.deleteRecursively() }
 
     /**
-     * Output directory for LSPatch
+     * LSPatch output directory.
      */
     private val lspatchedDir = patchedDir.resolve("lspatched").also { it.deleteRecursively() }
 
@@ -101,19 +102,19 @@ class StepRunner(
         private set
 
     /**
-     * Whether or not the patching/installation process has completed.
-     * Note that this does not mean all steps were finished successfully
+     * True once patching/installation has finished.
+     * This does not mean every step succeeded.
      */
     var completed by mutableStateOf<Boolean>(false)
         private set
 
     /**
-     * Whether or not a download step failed, this is only for errors related to network conditions and not cancellations
+     * True when a download fails because of a network error (not a user cancellation).
      */
     var downloadErrored by mutableStateOf<Boolean>(false)
 
     /**
-     * List of steps to go through for this install
+     * Steps for this install, in order.
      *
      * ORDER MATTERS
      */
@@ -136,8 +137,7 @@ class StepRunner(
     }.toImmutableList()
 
     /**
-     * Get a step that has already been successfully executed.
-     * This is used to retrieve previously executed dependency steps from a later step.
+     * Returns a completed step of type [T]. Later steps use this to pull output from earlier ones.
      */
     inline fun <reified T : Step> getCompletedStep(): T {
         val step = steps.asSequence()
@@ -153,18 +153,19 @@ class StepRunner(
     }
 
     /**
-     * Clears all cached files
+     * Deletes all cached files.
      */
     fun clearCache() {
         cacheDir.deleteRecursively()
     }
 
     /**
-     * Run all the [steps] in order
+     * Runs all [steps] in order.
      */
     suspend fun runAll(): Throwable? {
         for (step in steps) {
-            if (completed) return null // Failsafe in case runner is incorrectly marked as not completed too early
+            // Failsafe: stop early if the runner was already marked complete.
+            if (completed) return null
 
             currentStep = step
             val error = step.runCatching(this)
@@ -175,8 +176,7 @@ class StepRunner(
                 return error
             }
 
-            // Add delay for human psychology and
-            // better group visibility in UI (the active group can change way too fast)
+            // Brief delay so the UI group changes don't flash by too quickly.
             if (!preferenceManager.isDeveloper && step.durationMs < 1000) {
                 delay(1000L - step.durationMs)
             }

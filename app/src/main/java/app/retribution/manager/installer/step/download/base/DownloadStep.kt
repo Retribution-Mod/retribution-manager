@@ -25,9 +25,9 @@ import java.io.File
 import kotlin.math.roundToInt
 
 /**
- * Specialized step used to download a file
+ * Base class for a download step.
  *
- * Files are downloaded to [destination] then copied to [workingCopy] for safe patching
+ * Files are saved to [destination], then copied to [workingCopy] for patching.
  */
 @Stable
 abstract class DownloadStep : Step() {
@@ -39,40 +39,40 @@ abstract class DownloadStep : Step() {
     private val restService: RestService by inject()
 
     /**
-     * Url of the desired file to download
+     * Direct URL to download, when not using a mirror.
      */
     open val downloadFullUrl: String? = null
 
     /**
-     * Mirror url path of the desired file to download
+     * Mirror URL path to download from.
      */
     open val downloadMirrorUrlPath: String? = null
 
     /**
-     * Where to download the file to
+     * Where the file is downloaded to.
      */
     abstract val destination: File
 
     /**
-     * Where the downloaded file should be copied to so that it can be used for patching
+     * Where the downloaded file is copied for patching.
      */
     abstract val workingCopy: File
 
     /**
-     * Whether hash verification should be enforced for this download
-     * Override to true for security-critical downloads like base APKs
+     * Whether to enforce SHA-256 verification.
+     * Enable for security-critical files like base APKs.
      */
     open val enforceHashVerification: Boolean = false
 
     /**
-     * The file identifier used for hash lookup (e.g., "base", "config.xxhdpi")
-     * Only needed if enforceHashVerification is true
+     * File identifier for hash lookup (e.g., "base", "config.xxhdpi").
+     * Only used when [enforceHashVerification] is true.
      */
     open val hashFileIdentifier: String? = null
 
     /**
-     * The version string used for hash lookup
-     * Only needed if enforceHashVerification is true
+     * Version string for hash lookup.
+     * Only used when [enforceHashVerification] is true.
      */
     open val hashVersion: String? = null
 
@@ -121,7 +121,7 @@ abstract class DownloadStep : Step() {
     }
 
     /**
-     * Verifies that a file was properly downloaded
+     * Checks the downloaded file exists and is not empty.
      */
     open suspend fun verify() {
         if (!destination.exists())
@@ -132,7 +132,7 @@ abstract class DownloadStep : Step() {
     }
 
     /**
-     * Verifies the hash of a downloaded file against the expected hash from the tracker
+     * Compares the downloaded file's SHA-256 against the expected hash.
      */
     protected suspend fun verifyHash(runner: StepRunner, mirrorBaseUrl: String) {
         if (!enforceHashVerification || hashFileIdentifier == null || hashVersion == null) {
@@ -182,7 +182,7 @@ abstract class DownloadStep : Step() {
             if (destination.length() > 0) {
                 runner.logger.i("$fileName is cached")
                 
-                // Verify hash of cached file if enforcement is enabled
+                // Re-verify cached file hashes when enabled.
                 if (enforceHashVerification && downloadMirrorUrlPath != null) {
                     try {
                         verifyHash(runner, preferenceManager.mirror.baseUrl)
@@ -190,10 +190,9 @@ abstract class DownloadStep : Step() {
                         runner.logger.e("Cached file failed hash verification: ${e.message}")
                         runner.logger.i("Deleting invalid cached file: $fileName")
                         destination.delete()
-                        // Continue to download fresh copy
                     }
                     
-                    // If file still exists after hash check, it's valid
+                    // Cache is valid if the file survived hash checks.
                     if (destination.exists()) {
                         cached = true
                         runner.logger.i("Moving $fileName to working directory")
@@ -229,7 +228,7 @@ abstract class DownloadStep : Step() {
             null
         }
 
-        // If the current mirror fails, try other mirrors
+        // Try the remaining mirrors if the first one fails.
         if (!successfulDownload && downloadMirrorUrlPath != null) {
             for (mirror in Mirror.entries - preferenceManager.mirror) {
                 downloadUrl = mirror.baseUrl + downloadMirrorUrlPath
@@ -256,7 +255,7 @@ abstract class DownloadStep : Step() {
             runner.logger.i("Verifying downloaded file")
             verify()
             
-            // Verify hash if this is a mirror download and enforcement is enabled
+            // Verify the hash for mirror downloads when enforcement is on.
             if (usedMirrorBaseUrl != null && enforceHashVerification) {
                 verifyHash(runner, usedMirrorBaseUrl)
             }
