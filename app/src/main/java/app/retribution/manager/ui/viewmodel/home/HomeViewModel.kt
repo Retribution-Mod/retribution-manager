@@ -58,6 +58,9 @@ class HomeViewModel(
     var release by mutableStateOf<Release?>(null)
         private set
 
+    var moduleUpdateRelease by mutableStateOf<Release?>(null)
+    var showModuleUpdateDialog by mutableStateOf(false)
+
     private var updateDownloadUrl by mutableStateOf<String?>(null)
     var showUpdateDialog by mutableStateOf(false)
     var isUpdating by mutableStateOf(false)
@@ -130,6 +133,8 @@ class HomeViewModel(
             }
             repo.getLatestRelease("Retribution-Mod/retribution-xposed").ifSuccessful {
                 if (prefs.moduleVersion != it.tagName) {
+                    moduleUpdateRelease = it
+                    showModuleUpdateDialog = true
                     prefs.moduleVersion = it.tagName
                     val module = File(cacheDir, "xposed.apk")
                     if (module.exists()) module.delete()

@@ -16,6 +16,7 @@ import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.OpenInNew
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.outlined.Settings
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -25,6 +26,7 @@ import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -106,6 +108,30 @@ class HomeScreen : Screen {
         }
 
         // == Screen == //
+
+        if (viewModel.showModuleUpdateDialog && viewModel.moduleUpdateRelease != null) {
+            AlertDialog(
+                onDismissRequest = { viewModel.showModuleUpdateDialog = false },
+                title = { Text("Xposed module update available") },
+                text = { Text("A new Retribution Xposed module (${viewModel.moduleUpdateRelease?.name ?: viewModel.moduleUpdateRelease?.tagName}) is available. Repatch Discord to get the latest bundle support and security fixes.") },
+                confirmButton = {
+                    TextButton(
+                        onClick = {
+                            viewModel.showModuleUpdateDialog = false
+                            latestVersion?.let { navigator.push(InstallerScreen(it, null)) }
+                        },
+                        enabled = latestVersion != null
+                    ) {
+                        Text("Re-patch")
+                    }
+                },
+                dismissButton = {
+                    TextButton(onClick = { viewModel.showModuleUpdateDialog = false }) {
+                        Text("Later")
+                    }
+                }
+            )
+        }
 
         Scaffold(
             topBar = { TitleBar() },

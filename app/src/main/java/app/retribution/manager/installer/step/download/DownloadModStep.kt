@@ -3,6 +3,7 @@ package app.retribution.manager.installer.step.download
 import androidx.compose.runtime.Stable
 import app.retribution.manager.R
 import app.retribution.manager.installer.step.download.base.DownloadStep
+import app.retribution.manager.network.utils.ifSuccessful
 import java.io.File
 import java.net.URL
 
@@ -107,6 +108,18 @@ class DownloadModStep(
                 "(GitHub releases from Retribution-Mod/retribution-xposed repository). " +
                 "Provided URL: $customModUrl"
             )
+        }
+    }
+
+    override suspend fun verify() {
+        super.verify()
+        // Record the installed module version after a successful download
+        try {
+            restService.getLatestRelease("Retribution-Mod/retribution-xposed").ifSuccessful { release ->
+                preferenceManager.moduleVersion = release.tagName
+            }
+        } catch (_: Exception) {
+            // Ignore network failures; the version will be updated on the next app launch
         }
     }
 
