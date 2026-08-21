@@ -113,7 +113,7 @@ class HomeScreen : Screen {
             AlertDialog(
                 onDismissRequest = { viewModel.showModuleUpdateDialog = false },
                 title = { Text("Xposed module update available") },
-                text = { Text("A new Retribution Xposed module (${viewModel.moduleUpdateRelease?.name ?: viewModel.moduleUpdateRelease?.tagName}) is available. Repatch Discord to get the latest bundle support and security fixes.") },
+                text = { Text("A new Retribution Xposed module (${viewModel.moduleUpdateRelease?.versionName ?: viewModel.moduleUpdateRelease?.tagName}) is available. Repatch Discord to get the latest bundle support and security fixes.") },
                 confirmButton = {
                     TextButton(
                         onClick = {
