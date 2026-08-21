@@ -1,3 +1,16 @@
+# [1.6.0](https://github.com/Retribution-Mod/retribution-manager/compare/v1.5.3...v1.6.0) (2026-08-21)
+
+
+### Bug Fixes
+
+* build errors in manager update prompt ([da3b803](https://github.com/Retribution-Mod/retribution-manager/commit/da3b8035195bd379c91f2cd7a9d6e63cc61c4a6d))
+* use explicit xposed release tag for module downloads ([1640c07](https://github.com/Retribution-Mod/retribution-manager/commit/1640c07ea12dff37b308dba1ebceada59b39b767))
+
+
+### Features
+
+* prompt to re-patch when new Xposed module is available ([6e1b496](https://github.com/Retribution-Mod/retribution-manager/commit/6e1b4969b3f0d5b07643822062a7773c912e9a0d))
+
 ## [1.5.3](https://github.com/Retribution-Mod/retribution-manager/compare/v1.5.2...v1.5.3) (2026-08-21)
 
 
