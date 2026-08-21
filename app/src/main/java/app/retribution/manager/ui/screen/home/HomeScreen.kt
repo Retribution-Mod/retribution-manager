@@ -18,6 +18,9 @@ import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -28,6 +31,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
+import androidx.compose.ui.graphics.Color
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -144,67 +148,111 @@ class HomeScreen : Screen {
                     .padding(16.dp)
                     .fillMaxWidth()
             ) {
-                AppIcon(
-                    customIcon = prefs.patchIcon,
-                    releaseChannel = prefs.channel,
-                    modifier = Modifier.size(60.dp)
-                )
-
-                Text(
-                    text = prefs.appName,
-                    style = MaterialTheme.typography.titleLarge
-                )
-
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    modifier = Modifier.fillMaxWidth()
+                Card(
+                    modifier = Modifier.fillMaxWidth(),
+                    colors = CardDefaults.cardColors(containerColor = Color(0xFF1A1A1A)),
+                    shape = RoundedCornerShape(20.dp)
                 ) {
-                    AnimatedVisibility(visible = currentVersion != null) {
-                        Text(
-                            text = stringResource(
-                                R.string.version_current,
-                                currentVersion.toString()
-                            ),
-                            style = MaterialTheme.typography.labelLarge,
-                            color = LocalContentColor.current.copy(alpha = 0.5f),
-                            textAlign = TextAlign.Center
-                        )
-                    }
-
-                    val latestLabel =
-                        if (prefs.discordVersion.isNotBlank()) R.string.version_target else R.string.version_latest
-
-                    AnimatedVisibility(visible = latestVersion != null) {
-                        Text(
-                            text = stringResource(latestLabel, latestVersion.toString()),
-                            style = MaterialTheme.typography.labelLarge,
-                            color = LocalContentColor.current.copy(alpha = 0.5f),
-                            textAlign = TextAlign.Center
-                        )
-                    }
-                }
-
-                Button(
-                    onClick = { showInstallDialog = true },
-                    enabled = latestVersion != null && (prefs.allowDowngrade || latestVersion >= (currentVersion ?: Constants.DUMMY_VERSION)),
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    val label = when {
-                        latestVersion == null -> R.string.msg_loading
-                        currentVersion == null -> R.string.action_install
-                        currentVersion == latestVersion -> R.string.action_reinstall
-                        latestVersion > currentVersion -> R.string.action_update
-                        else -> if (prefs.allowDowngrade) R.string.msg_downgrade else R.string.msg_downgrade_disallowed
-                    }
-
-                    Text(
-                        text = stringResource(label),
-                        textAlign = TextAlign.Center,
-                        maxLines = 1,
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.spacedBy(12.dp),
                         modifier = Modifier
-                            .basicMarquee()
                             .fillMaxWidth()
-                    )
+                            .padding(20.dp)
+                    ) {
+                        AppIcon(
+                            customIcon = prefs.patchIcon,
+                            releaseChannel = prefs.channel,
+                            modifier = Modifier.size(72.dp)
+                        )
+
+                        Text(
+                            text = prefs.appName,
+                            style = MaterialTheme.typography.headlineSmall,
+                            color = Color(0xFFFF6B35)
+                        )
+
+                        Column(
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            AnimatedVisibility(visible = currentVersion != null) {
+                                Text(
+                                    text = stringResource(
+                                        R.string.version_current,
+                                        currentVersion.toString()
+                                    ),
+                                    style = MaterialTheme.typography.labelLarge,
+                                    color = Color.White.copy(alpha = 0.5f),
+                                    textAlign = TextAlign.Center
+                                )
+                            }
+
+                            val latestLabel =
+                                if (prefs.discordVersion.isNotBlank()) R.string.version_target else R.string.version_latest
+
+                            AnimatedVisibility(visible = latestVersion != null) {
+                                Text(
+                                    text = stringResource(latestLabel, latestVersion.toString()),
+                                    style = MaterialTheme.typography.labelLarge,
+                                    color = Color.White.copy(alpha = 0.5f),
+                                    textAlign = TextAlign.Center
+                                )
+                            }
+                        }
+
+                        Button(
+                            onClick = { showInstallDialog = true },
+                            enabled = latestVersion != null && (prefs.allowDowngrade || latestVersion >= (currentVersion ?: Constants.DUMMY_VERSION)),
+                            modifier = Modifier.fillMaxWidth(),
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = Color(0xFFFF6B35),
+                                contentColor = Color.Black,
+                                disabledContainerColor = Color(0xFF3A3A3A),
+                                disabledContentColor = Color(0xFF808080)
+                            )
+                        ) {
+                            val label = when {
+                                latestVersion == null -> R.string.msg_loading
+                                currentVersion == null -> R.string.action_install
+                                currentVersion == latestVersion -> R.string.action_reinstall
+                                latestVersion > currentVersion -> R.string.action_update
+                                else -> if (prefs.allowDowngrade) R.string.msg_downgrade else R.string.msg_downgrade_disallowed
+                            }
+
+                            Text(
+                                text = stringResource(label),
+                                textAlign = TextAlign.Center,
+                                maxLines = 1,
+                                modifier = Modifier
+                                    .basicMarquee()
+                                    .fillMaxWidth()
+                            )
+                        }
+
+                        AnimatedVisibility(visible = viewModel.installManager.current != null) {
+                            Row(
+                                horizontalArrangement = Arrangement.spacedBy(2.dp),
+                                modifier = Modifier.clip(RoundedCornerShape(16.dp))
+                            ) {
+                                SegmentedButton(
+                                    icon = Icons.Filled.OpenInNew,
+                                    text = stringResource(R.string.action_launch),
+                                    onClick = { viewModel.launchMod() }
+                                )
+                                SegmentedButton(
+                                    icon = Icons.Filled.Info,
+                                    text = stringResource(R.string.action_info),
+                                    onClick = { viewModel.launchModInfo() }
+                                )
+                                SegmentedButton(
+                                    icon = Icons.Filled.Delete,
+                                    text = stringResource(R.string.action_uninstall),
+                                    onClick = { viewModel.uninstallMod() }
+                                )
+                            }
+                        }
+                    }
                 }
 
                 if (showInstallDialog && latestVersion != null) {
@@ -217,29 +265,6 @@ class HomeScreen : Screen {
                             navigator.navigate(InstallerScreen(version, packageName = pkg, appName = name))
                         }
                     )
-                }
-
-                AnimatedVisibility(visible = viewModel.installManager.current != null) {
-                    Row(
-                        horizontalArrangement = Arrangement.spacedBy(2.dp),
-                        modifier = Modifier.clip(RoundedCornerShape(16.dp))
-                    ) {
-                        SegmentedButton(
-                            icon = Icons.Filled.OpenInNew,
-                            text = stringResource(R.string.action_launch),
-                            onClick = { viewModel.launchMod() }
-                        )
-                        SegmentedButton(
-                            icon = Icons.Filled.Info,
-                            text = stringResource(R.string.action_info),
-                            onClick = { viewModel.launchModInfo() }
-                        )
-                        SegmentedButton(
-                            icon = Icons.Filled.Delete,
-                            text = stringResource(R.string.action_uninstall),
-                            onClick = { viewModel.uninstallMod() }
-                        )
-                    }
                 }
 
                 ElevatedCard(
