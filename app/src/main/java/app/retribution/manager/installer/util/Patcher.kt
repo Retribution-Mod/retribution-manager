@@ -1,12 +1,17 @@
 package app.retribution.manager.installer.util
 
+import app.retribution.manager.domain.manager.PreferenceManager
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 import org.lsposed.patch.LSPatch
 import org.lsposed.patch.util.Logger
 import java.io.File
 
-object Patcher {
+object Patcher : KoinComponent {
+
+    private val preferences: PreferenceManager by inject()
 
     suspend fun patch(
         logger: Logger,
@@ -15,8 +20,7 @@ object Patcher {
         embeddedModules: List<String>
     ) {
         withContext(Dispatchers.IO) {
-            LSPatch(
-                logger,
+            val args = arrayListOf(
                 *apkPaths.toTypedArray(),
                 "-o",
                 outputDir.absolutePath,
@@ -30,6 +34,15 @@ object Patcher {
                 "password",
                 "alias",
                 "password"
+            )
+
+            if (preferences.debuggable) {
+                args.add("-d")
+            }
+
+            LSPatch(
+                logger,
+                *args.toTypedArray()
             ).doCommandLine()
         }
     }
