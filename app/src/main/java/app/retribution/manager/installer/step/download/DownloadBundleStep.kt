@@ -56,25 +56,25 @@ class DownloadBundleStep : Step() {
             try {
                 runner.logger.i("Downloading bundle variant: $variant")
 
-                if (dest.exists() && dest.length() > 0) {
-                    runner.logger.i("$filename is already cached")
-                } else {
-                    val result = downloadManager.download(url, dest) { newProgress ->
-                        progress = newProgress
-                    }
+                // Always re-fetch the bundle on install so stale cache entries (from
+                // older releases or failed partial downloads) do not get reused.
+                if (dest.exists()) dest.delete()
 
-                    when (result) {
-                        is DownloadResult.Success -> {
-                            runner.logger.i("$filename downloaded")
-                        }
-                        is DownloadResult.Error -> {
-                            runner.logger.e("Failed to download $filename: ${result.debugReason}")
-                            continue
-                        }
-                        is DownloadResult.Cancelled -> {
-                            runner.logger.e("Cancelled download of $filename")
-                            continue
-                        }
+                val result = downloadManager.download(url, dest) { newProgress ->
+                    progress = newProgress
+                }
+
+                when (result) {
+                    is DownloadResult.Success -> {
+                        runner.logger.i("$filename downloaded")
+                    }
+                    is DownloadResult.Error -> {
+                        runner.logger.e("Failed to download $filename: ${result.debugReason}")
+                        continue
+                    }
+                    is DownloadResult.Cancelled -> {
+                        runner.logger.e("Cancelled download of $filename")
+                        continue
                     }
                 }
 
