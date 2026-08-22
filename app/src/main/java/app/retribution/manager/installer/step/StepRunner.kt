@@ -13,7 +13,9 @@ import app.retribution.manager.installer.step.download.DownloadBaseStep
 import app.retribution.manager.installer.step.download.DownloadLangStep
 import app.retribution.manager.installer.step.download.DownloadLibsStep
 import app.retribution.manager.installer.step.download.DownloadResourcesStep
+import app.retribution.manager.installer.step.download.DownloadBundleStep
 import app.retribution.manager.installer.step.download.DownloadModStep
+import app.retribution.manager.installer.step.installing.GrantStoragePermissionStep
 import app.retribution.manager.installer.step.installing.InstallStep
 import app.retribution.manager.installer.step.patching.AddModStep
 import app.retribution.manager.installer.step.patching.PatchManifestsStep
@@ -125,6 +127,7 @@ class StepRunner(
         add(DownloadLangStep(discordCacheDir, patchedDir, discordVersion.toVersionCode()))
         add(DownloadResourcesStep(discordCacheDir, patchedDir, discordVersion.toVersionCode()))
         add(DownloadModStep(patchedDir, customModUrl))
+        add(DownloadBundleStep())
 
         // Patching
         if (preferenceManager.patchIcon) add(ReplaceIconStep())
@@ -134,6 +137,7 @@ class StepRunner(
 
         // Installing
         add(InstallStep(lspatchedDir))
+        add(GrantStoragePermissionStep())
     }.toImmutableList()
 
     /**

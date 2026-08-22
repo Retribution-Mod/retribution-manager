@@ -44,6 +44,15 @@ android {
     }
 
     buildTypes {
+        debug {
+            applicationIdSuffix = ".test"
+            buildConfigField("String", "MOD_NAME", "\"Retribution Test\"")
+            buildConfigField("String", "MANAGER_NAME", "\"RetributionManagerTest\"")
+            buildConfigField("String", "MODDED_APP_PACKAGE_NAME", "\"app.retribution.test\"")
+            isDebuggable = true
+            isMinifyEnabled = false
+            isShrinkResources = false
+        }
         release {
             isCrunchPngs = true
             isMinifyEnabled = true

@@ -22,6 +22,7 @@
     <queries>
         <!-- Default modded app package and common original Discord package. -->
         <package android:name="app.retribution"/>
+        <package android:name="app.retribution.test"/>
         <package android:name="com.discord"/>
 
         <!-- Allow the manager to discover any app that has a launcher icon. -->

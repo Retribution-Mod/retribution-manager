@@ -33,6 +33,7 @@
     <string name="step_dl_lang">Downloading language apk</string>
     <string name="step_dl_res">Downloading resources apk</string>
     <string name="step_dl_mod">Downloading Retribution</string>
+    <string name="step_dl_bundle">Pre-caching Retribution bundle</string>
 
     <string name="step_change_icon">Changing app icon</string>
     <string name="step_patch_manifests">Patching app manifests</string>
@@ -40,6 +41,7 @@
 
     <string name="step_signing">Signing APKs</string>
     <string name="step_installing">Installing APKs</string>
+    <string name="step_grant_storage">Granting storage permission</string>
 
     <string name="installer_success">Installed successfully</string>
     <string name="installer_aborted">Install canceled</string>
