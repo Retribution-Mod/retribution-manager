@@ -1,3 +1,10 @@
+# [1.9.0](https://github.com/Retribution-Mod/retribution-manager/compare/v1.8.2...v1.9.0) (2026-08-22)
+
+
+### Features
+
+* **manager:** always re-download bundle cache on install ([8fc4cf8](https://github.com/Retribution-Mod/retribution-manager/commit/8fc4cf866209d579abf66ea94d213ef90bca6d9b))
+
 ## [1.8.2](https://github.com/Retribution-Mod/retribution-manager/compare/v1.8.1...v1.8.2) (2026-08-22)
 
 
