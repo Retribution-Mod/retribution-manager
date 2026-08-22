@@ -1,3 +1,10 @@
+## [1.8.2](https://github.com/Retribution-Mod/retribution-manager/compare/v1.8.1...v1.8.2) (2026-08-22)
+
+
+### Bug Fixes
+
+* pass debuggable flag to LSPatch, improve storage permission check, pre-cache bundles ([ddf1e6d](https://github.com/Retribution-Mod/retribution-manager/commit/ddf1e6d6618d2a1d1e43d2b6eac29c63cf239604))
+
 ## [1.8.1](https://github.com/Retribution-Mod/retribution-manager/compare/v1.8.0...v1.8.1) (2026-08-21)
 
 
